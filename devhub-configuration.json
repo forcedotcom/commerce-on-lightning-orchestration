@@ -1,0 +1,23 @@
+{
+    "apiVersion": "52.0",
+    "hubOrgAdminEmail": "$(whoami)@salesforce.com",
+    "hubOrgAdminUsername": "ceo@mydevhub.com",
+    "hubOrgAdminPassword": "123456",
+    "hubOrgMyDomain": "devhub",
+    "hubOrgAlias": "devhub",
+    "sfdcLoginUrl": "https://$(hostname):6101",
+    "instanceUrl": "https://localhost:6101",
+    "scratchOrgs": [
+        {
+            "scratchOrgAdminUsername": "demo@1commerce.com",
+            "scratchOrgBuyerUsername": "buyer@1commerce.com",
+            "scratchOrgAlias": "1sorg",
+            "stores": [
+                {
+                    "storeName": "1commerce",
+                    "paymentAdapter": "stripe"
+                }
+            ]
+        }
+    ]
+}

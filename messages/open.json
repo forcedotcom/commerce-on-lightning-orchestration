@@ -1,0 +1,6 @@
+{
+    "devhubconfig": {
+        "cmdDescription": "Open devhub-configuration.json file",
+        "editorDescription": "Editor to open file with"
+    }
+}

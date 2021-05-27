@@ -1,0 +1,14 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://json-schema.org/draft/2020-12/schema",
+    "title": "devhub-configuration",
+    "description": "A orchestration definition file to setup orgs and stores",
+    "type": "object",
+    "properties": {
+        "productId": {
+            "description": "The unique identifier for a product",
+            "type": "integer"
+        }
+    },
+    "required": [ "productId" ]
+}

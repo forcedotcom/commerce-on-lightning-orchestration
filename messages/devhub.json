@@ -1,0 +1,49 @@
+{
+    "devHubFlags": {
+        "configFileDescription": "Pass in config to override default",
+        "instanceUrlDescription": "URL of the server you want for your devhub",
+        "hubOrgAdminUsernameDescription": "username of the hub org admin",
+        "hubOrgAdminPasswordDescription": "password of the hub org admin",
+        "hubOrgAdminEmailDescription": "email of the hub org admin",
+        "hubOrgAliasDescription": "Alias for your devhub",
+        "hubOrgMyDomainDescription": "My domain name of the hub org",
+        "apiVersionDescription": "Version of current Salesforce"
+    },
+    "setup": {
+        "cmdDescription": "set up a devhub",
+        "completedStep1": "Completed Step 1",
+        "completedStep2": "Completed Step 2",
+        "completedStep3": "Completed Step 3",
+        "devhubCreationSuccessfulProceedCreatingScratchOrgStoresString": "Devhub Creation successful.  You can proceed with creating a new scratch org and associated stores. %s",
+        "devhubAlreadyExists": "Devhub already exists: ",
+        "creatingDevHubOrgJustAMin": "Creating a developer hub org, this may take a few minutes...\n",
+        "hubOrgAdminUsername": "Hub org admin username: %s\n",
+        "hubOrgAdminPassword": "Hub org admin password: %s\n",
+        "hubOrgAdminUserEmail": "Hub org admin user email: %s\n",
+        "hubOrgMyDomain": "Hub org my domain: %s\n",
+        "hubOrgAlias": "Hub org alias: %s\n",
+        "instanceUrl": "Instance Url: %s\n",
+        "creatingOrg": "Creating org...",
+        "creatingWithString": "Creating with %s",
+        "orgCreationFailed": "Org creation failed",
+        "somethingWentWrongTryingAgain": "Something went wrong, trying again",
+        "orgCreationFinished": "Org creation finished",
+        "failedToCreateDevhubSuggestionsInfo": "Failed to create devhub, perhaps you're re-using an existing domain? Create a new configuration file for a new dev hub. ",
+        "errorSomethingWentWrongStringTryCheckingString": "Something went wrong - no %s - try checking if this returns anything:\n%s\nprobably need to reset",
+        "enablingOrgid": "'Enabling orgid '",
+        "usingString": "Using %s",
+        "errorSomethingWentWrongCouldNotEnableDeveloperExperience": "Something went wrong could not enable salesforce developer experience",
+        "waitingForOrgToBecomeAvailable": "Waiting for org to become available",
+        "somethingWentWrongWithString": "Something went wrong with %s"
+    },
+    "auth": {
+        "cmdDescription": "Authorize a devhub",
+        "already": "Already Authed",
+        "checkSync": "Authenticating Development Hub at %s, alias %s...",
+        "authenticating": "Authenticating...",
+        "authingWith": "Authing with %s",
+        "addingClientIdToHubAuthFile": "Adding clientId to hub auth file",
+        "doneAuthenticating": "Done Authenticating.",
+        "successfullyAuthenticated": "Successfully authenticated."
+    }
+}
