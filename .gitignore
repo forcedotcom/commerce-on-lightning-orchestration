@@ -18,7 +18,6 @@ status_*
 *-debug.log
 *-error.log
 /dist
-/lib
 oclif.manifest.json
 .oclif.manifest.json
 
@@ -40,6 +39,8 @@ lerna-debug.log
 
 # compile source
 lib
+!\src/lib
+!\test/lib
 
 # test artifacts
 *xunit.xml

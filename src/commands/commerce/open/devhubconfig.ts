@@ -18,15 +18,15 @@ const CMD = `commerce:${TOPIC}:devhubconfig`;
 const messages = Messages.loadMessages('commerce', TOPIC);
 
 export class OpenDevHubConfig extends SfdxCommand {
-    public static description = messages.getMessage('devhubconfig.cmdDescription');
+  public static description = messages.getMessage('devhubconfig.cmdDescription');
 
-    public static examples = [`sfdx ${CMD} -e atom`];
+  public static examples = [`sfdx ${CMD} -e atom`];
 
-    protected static flagsConfig = openFlags;
+  protected static flagsConfig = openFlags;
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    public async run(): Promise<AnyJson> {
-        shell(`${this.flags.editor as string} ${BASE_DIR + '/devhub-configuration.json'}`);
-        return { isOpened: true };
-    }
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async run(): Promise<AnyJson> {
+    shell(`${this.flags.editor as string} ${BASE_DIR + '/devhub-configuration.json'}`);
+    return { isOpened: true };
+  }
 }

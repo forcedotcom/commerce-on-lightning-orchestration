@@ -1,0 +1,40 @@
+[
+  {
+    "command": "commerce:devhub:auth",
+    "plugin": "commerce",
+    "flags": ["client-id", "configuration", "json", "loglevel", "server-cert", "use-jwt"]
+  },
+  {
+    "command": "commerce:open:devhubconfig",
+    "plugin": "commerce",
+    "flags": ["editor", "json", "loglevel"]
+  },
+  {
+    "command": "commerce:scratchorg:create",
+    "plugin": "commerce",
+    "flags": [
+      "api-version",
+      "configuration",
+      "hub-org-admin-username",
+      "is-b2c-lite-access-perm-needed",
+      "json",
+      "loglevel",
+      "scratch-org-admin-username",
+      "scratch-org-alias",
+      "scratch-org-number"
+    ]
+  },
+  {
+    "command": "commerce:setup",
+    "plugin": "commerce",
+    "flags": [
+      "configuration",
+      "json",
+      "loglevel",
+      "scratch-org-admin-username",
+      "scratch-org-number",
+      "scratch-org-store-name",
+      "store-number"
+    ]
+  }
+]
