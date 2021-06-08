@@ -94,6 +94,7 @@ export const replaceErrors = (key, value) => {
 };
 /* eslint-disable */
 export class DevHubConfig {
+  public type: string; // b2c or b2b
   public clientId: string;
   public useJwt: boolean;
   public apiVersion: string;

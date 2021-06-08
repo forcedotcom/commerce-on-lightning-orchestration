@@ -13,6 +13,7 @@ import { BASE_DIR } from '../../lib/utils/constants/properties';
 import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 // import { shellJsonSfdx } from '../../lib/utils/shell';
+import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -107,6 +108,8 @@ export class Setup extends SfdxCommand {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         // output = await StoreCreate.run(addAllowedArgs(this.argv, StoreCreate), this.config);
         // output = shellJsonSfdx('sfdx commerce:store:create ');
+        shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
+        output = shellJsonSfdx('sfdx commerce:store:create '); // TODO pass args ['configuration', 'admin-username', 'scratch-org-buyer-username', 'template-name']
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
@@ -120,7 +123,10 @@ export class Setup extends SfdxCommand {
           //     addAllowedArgs(this.argv, PaymentsQuickstartSetup),
           //     this.config
           // );
-          // shellJsonSfdx('sfdx commerce:store:create ');
+          // install plugin if not installed... maybe ask user first?
+          // TODO add this to requires
+          shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
+          output = shellJsonSfdx('sfdx commerce:payments:quickstart:setup '); // TODO pass args payment-adapter, store-name
           if (!output)
             throw new SfdxError(
               messages.getMessage('setup.errorPaymentsQuickstartSetup', [

@@ -33,7 +33,13 @@ export class ScratchOrgCreate extends SfdxCommand {
   protected static flagsConfig = {
     ...filterFlags(['configuration', 'api-version', 'hub-org-admin-username'], devHubFlags),
     ...filterFlags(
-      ['scratch-org-admin-username', 'scratch-org-number', 'scratch-org-alias', 'is-b2c-lite-access-perm-needed'],
+      [
+        'type',
+        'scratch-org-admin-username',
+        'scratch-org-number',
+        'scratch-org-alias',
+        'is-b2c-lite-access-perm-needed',
+      ],
       scratchOrgFlags
     ),
   };
@@ -128,7 +134,7 @@ export class ScratchOrgCreate extends SfdxCommand {
     try {
       this.ux.setSpinnerStatus(msgs.getMessage('create.using', ['sfdx force:org:create']));
       const res = shellJsonSfdx(
-        `sfdx force:org:create -f ${CONFIG_DIR()}/project-scratch-def.json ` +
+        `sfdx force:org:create -f ${CONFIG_DIR()}/${this.devHubConfig.type.toLowerCase()}-project-scratch-def.json ` +
           `username="${this.devHubConfig.scratchOrgAdminUsername}" -d 30 ` +
           `--apiversion="${this.devHubConfig.apiVersion}" -a "${this.devHubConfig.scratchOrgAlias}" -s ` +
           `-v "${this.devHubConfig.hubOrgAdminUsername}" -w 15 --json`

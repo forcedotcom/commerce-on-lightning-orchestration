@@ -123,7 +123,7 @@ export class DevhubAuth extends SfdxCommand {
       new ConnectAppResult(),
       await statusManager.getValue(this.devHubConfig, new Devhub(), 'connectApp')
     );
-    if (connectedApp.oauthConfig.consumerKey && connectedApp.success === true) return;
+    if (connectedApp.oauthConfig && connectedApp.oauthConfig.consumerKey && connectedApp.success === true) return;
     this.createKey();
     // install plugin if not installed... maybe ask user first?
     shell('sfdx plugins|grep sfdx-waw-plugin>/dev/null || echo y | sfdx plugins:install sfdx-waw-plugin');

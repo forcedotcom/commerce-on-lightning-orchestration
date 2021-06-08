@@ -37,4 +37,9 @@ export const scratchOrgFlags = {
     default: 'devhub',
     description: messages.getMessage('createFlags.scratchOrgAliasDescription'),
   }),
+  type: flags.string({
+    char: 't',
+    default: 'b2c',
+    description: 'b2b or b2c',
+  }),
 };
