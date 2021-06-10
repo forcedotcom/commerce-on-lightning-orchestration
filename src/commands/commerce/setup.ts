@@ -9,10 +9,9 @@ import { Messages, SfdxError } from '@salesforce/core';
 import chalk from 'chalk';
 import { AnyJson } from '@salesforce/ts-types';
 import { addAllowedArgs, modifyArgFlag } from '../../lib/utils/args/flagsUtils';
-import { BASE_DIR } from '../../lib/utils/constants/properties';
+import { BASE_DIR, CONFIG_DIR } from '../../lib/utils/constants/properties';
 import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
-// import { shellJsonSfdx } from '../../lib/utils/shell';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
@@ -29,7 +28,7 @@ const devhubMessages = Messages.loadMessages('commerce', 'devhub');
 export class Setup extends SfdxCommand {
   public static description = messages.getMessage('setup.cmdDescription');
 
-  public static examples = [`sfdx ${CMD} --configuration devhub-configuration.json`, `sfdx ${CMD} -r -y`];
+  public static examples = [`sfdx ${CMD} --configuration devhub-configuration.json`, `sfdx ${CMD}`];
 
   protected static flagsConfig = {
     // TODO set these flags in a config somewhere so all scripts can use them
@@ -57,6 +56,16 @@ export class Setup extends SfdxCommand {
       char: 'm',
       default: -1,
       description: storeMessages.getMessage('setup.storeNumberDescription'),
+    }),
+    type: flags.string({
+      char: 'c',
+      default: 'b2c',
+      description: 'The type of store you want to create',
+    }),
+    definitionfile: flags.filepath({
+      char: 'f',
+      default: CONFIG_DIR() + '/store-scratch-def.json',
+      description: messages.getMessage('convertFlags.configFileDescription'),
     }),
   };
 
@@ -105,11 +114,10 @@ export class Setup extends SfdxCommand {
       for (store; store < storeTotal; store++) {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        // output = await StoreCreate.run(addAllowedArgs(this.argv, StoreCreate), this.config);
-        // output = shellJsonSfdx('sfdx commerce:store:create ');
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
-        output = shellJsonSfdx('sfdx commerce:store:create '); // TODO pass args ['configuration', 'admin-username', 'scratch-org-buyer-username', 'template-name']
+        output = shellJsonSfdx(
+          `sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} -v ${devHubConfig.hubOrgAdminUsername} -c ${devHubConfig.type} -t ${devHubConfig.definitionfile}`
+        );
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
@@ -118,11 +126,6 @@ export class Setup extends SfdxCommand {
             ])
           );
         if (devHubConfig.paymentAdapter) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          // output = await PaymentsQuickstartSetup.run(
-          //     addAllowedArgs(this.argv, PaymentsQuickstartSetup),
-          //     this.config
-          // );
           // install plugin if not installed... maybe ask user first?
           // TODO add this to requires
           shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');

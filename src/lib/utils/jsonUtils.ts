@@ -94,6 +94,7 @@ export const replaceErrors = (key, value) => {
 };
 /* eslint-disable */
 export class DevHubConfig {
+  public definitionfile: string;
   public type: string; // b2c or b2b
   public clientId: string;
   public useJwt: boolean;
@@ -135,6 +136,19 @@ export class ScratchOrgConfig {
 }
 export class Store {
   public storeName: string;
+}
+
+export class SfdxProject {
+  public packageDirectories: Record<string, any>[] = [
+    {
+      path: 'force-app',
+      default: true,
+    },
+  ];
+  public namespace: string = '';
+  public sfdcLoginUrl: string = 'http://localhost.internal.salesforce.com:6109';
+  public sourceApiVersion: string = '52.0';
+  public signupTargetLoginUrl: string;
 }
 
 export class Result<T> {

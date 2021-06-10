@@ -18,7 +18,7 @@ export const hook: Hook<'init'> = async () => {
     remove(BASE_DIR + '/' + d);
     copyFolderRecursiveSync(B_DIR + '/' + d, BASE_DIR);
   });
-  const files = ['devhub-configuration.json']; // fs.linkSync
+  const files = ['devhub-configuration.json', 'sfdx-project.json']; // fs.linkSync
   files
     .filter((f) => !fs.existsSync(BASE_DIR + '/' + f))
     .forEach((f) => fs.copyFileSync(B_DIR + '/' + f, BASE_DIR + '/' + f));

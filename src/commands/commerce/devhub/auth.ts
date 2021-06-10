@@ -42,9 +42,9 @@ export class DevhubAuth extends SfdxCommand {
     return { authSuccessful: true };
   }
 
-  public authWebLogin(hubOrgAlias: string, instanceUrl: string): Promise<void> {
+  public async authWebLogin(hubOrgAlias: string, instanceUrl: string): Promise<void> {
     // TODO this can take clientId and needs a secret
-    if (this.isDevhubConnected()) return;
+    if (await this.isDevhubConnected()) return;
     this.ux.log(chalk.green.bold(msgs.getMessage('auth.checkSync', [`${instanceUrl}`, `${hubOrgAlias}`])));
     this.ux.startSpinner(msgs.getMessage('auth.authenticating'));
     this.ux.setSpinnerStatus(msgs.getMessage('auth.authingWith', ['sfdx alt:auth:pass']));
@@ -65,7 +65,7 @@ export class DevhubAuth extends SfdxCommand {
       throw new SfdxError('Something went wrong');
     }
     this.ux.setSpinnerStatus(msgs.getMessage('auth.addingClientIdToHubAuthFile'));
-    if (!this.isDevhubConnected())
+    if (!(await this.isDevhubConnected()))
       // this should check connceted status and save auth file
       throw new SfdxError('Devhub not connected');
     this.ux.stopSpinner(msgs.getMessage('auth.doneAuthenticating'));
@@ -73,7 +73,7 @@ export class DevhubAuth extends SfdxCommand {
   }
 
   public async authJwtGrant(): Promise<void> {
-    if (this.isDevhubConnected()) return;
+    if (await this.isDevhubConnected()) return;
     const connectApp = Object.assign(
       new ConnectAppResult(),
       await statusManager.getValue(this.devHubConfig, new Devhub(), 'connectApp')
@@ -83,14 +83,14 @@ export class DevhubAuth extends SfdxCommand {
         ` -u ${this.devHubConfig.hubOrgAdminUsername} -f ${BASE_DIR + '/.certs'}/server.key` +
         ` -r ${this.devHubConfig.instanceUrl}`
     );
-    if (!this.isDevhubConnected())
+    if (!(await this.isDevhubConnected()))
       // this should check connceted status and save auth file
       throw new SfdxError('Devhub not connected');
     this.ux.stopSpinner(msgs.getMessage('auth.doneAuthenticating'));
     this.ux.log(chalk.green(msgs.getMessage('auth.successfullyAuthenticated')));
   }
 
-  public isDevhubConnected(): boolean {
+  public async isDevhubConnected(): Promise<boolean> {
     const devdir = DEVHUB_DIR(BASE_DIR, this.devHubConfig.hubOrgAdminUsername);
     const authFile = mkdirSync(devdir) + '/authFile.json';
     try {
@@ -101,6 +101,13 @@ export class DevhubAuth extends SfdxCommand {
         shellJsonSfdx(`sfdx force:auth:logout -u ${this.devHubConfig.hubOrgAdminUsername} -p`);
         return this.isDevhubConnected();
       }
+      const connectedApp = Object.assign(
+        new ConnectAppResult(),
+        await statusManager.getValue(this.devHubConfig, new Devhub(), 'connectApp')
+      );
+      connectedApp.oauthConfig.consumerKey = orgInfo.result.clientId;
+      connectedApp.success = true;
+      await statusManager.setValue(this.devHubConfig, 1, 'connectApp', connectedApp);
       this.ux.log(msgs.getMessage('auth.already'));
       fs.writeFileSync(authFile, JSON.stringify(orgInfo));
     } catch (e) {
@@ -146,6 +153,10 @@ export class DevhubAuth extends SfdxCommand {
         await this.authWebLogin(this.devHubConfig.hubOrgAlias, this.devHubConfig.instanceUrl);
         return await this.createConnectedApp();
       } else if ((e as SfdxError).message.indexOf('DUPLICATE_VALUE') < 0) throw e;
+      else {
+        connectedApp.errors = undefined;
+        await statusManager.setValue(this.devHubConfig, 1, 'connectApp', connectedApp);
+      }
     }
     this.ux.log(chalk.green('Opening devhub, please perform required steps.'));
     shell('sfdx force:org:open -u ' + this.devHubConfig.hubOrgAdminUsername);
@@ -159,8 +170,13 @@ export class DevhubAuth extends SfdxCommand {
           ' - Clicked Manage Profiles or Managed Permission Sets and add your profile or permset.'
       )
     );
+    // if (connectedApp.oauthConfig.consumerSecret) {
+    //   const consumerKey = await this.ux.prompt('Consumer Key', { required: true, type: 'mask' });
+    //   connectedApp.oauthConfig.consumerKey = consumerKey;
+    //   await statusManager.setValue(this.devHubConfig, 1, 'connectApp', connectedApp);
+    // } else
     await this.ux.prompt('[ENTER]', { required: false });
-    this.ux.log(chalk.green(msgs.getMessage("Assuming you've performed all the required steps")));
+    this.ux.log(chalk.green("Assuming you've performed all the required steps"));
   }
 
   public createKey(): void {

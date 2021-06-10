@@ -5,21 +5,22 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { SfdxCommand } from '@salesforce/command';
-import { Messages, SfdxError } from '@salesforce/core';
+import { fs, Messages, SfdxError } from '@salesforce/core';
 import chalk from 'chalk';
 import puppeteer from 'puppeteer';
 import { AnyJson } from '@salesforce/ts-types';
 import { devHubFlags } from '../../../lib/flags/commerce/devhub.flags';
 import { scratchOrgFlags } from '../../../lib/flags/commerce/scratchorg.flags';
 import { addAllowedArgs, filterFlags } from '../../../lib/utils/args/flagsUtils';
-import { CONFIG_DIR } from '../../../lib/utils/constants/properties';
-import { DevHubConfig, Org, parseJSONConfigWithFlags, replaceErrors } from '../../../lib/utils/jsonUtils';
+import { BASE_DIR, CONFIG_DIR, DEVHUB_DIR } from '../../../lib/utils/constants/properties';
+import { DevHubConfig, Org, parseJSONConfigWithFlags, replaceErrors, SfdxProject } from '../../../lib/utils/jsonUtils';
 import { Requires } from '../../../lib/utils/requires';
 import { getOrgInfo, getScratchOrgByUsername } from '../../../lib/utils/sfdx/forceOrgList';
 import { shellJsonSfdx } from '../../../lib/utils/shell';
 import { sleep } from '../../../lib/utils/sleep';
 import { ScratchOrg, statusManager } from '../../../lib/utils/statusFileManager';
 import { DevhubAuth } from '../devhub/auth';
+import { mkdirSync } from '../../../lib/utils/fsUtils';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -44,6 +45,7 @@ export class ScratchOrgCreate extends SfdxCommand {
     ),
   };
   private devHubConfig: DevHubConfig;
+  private devHubDir: string;
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static async addB2CLiteAccessPerm(scratchOrgAdminUsername: string, ux): Promise<void> {
@@ -99,6 +101,13 @@ export class ScratchOrgCreate extends SfdxCommand {
     if (!getOrgInfo(this.devHubConfig.hubOrgAdminUsername))
       // TODO add this as a require, ie requires devhub
       throw new SfdxError(msgs.getMessage('create.devhubSetupWasNotCompletedSuccessfully'));
+    const sfdxProject: SfdxProject = Object.assign(new SfdxProject(), fs.readJsonSync(BASE_DIR + '/sfdx-project.json'));
+    sfdxProject.sourceApiVersion = this.devHubConfig.apiVersion;
+    sfdxProject.sfdcLoginUrl = this.devHubConfig.instanceUrl;
+    sfdxProject.signupTargetLoginUrl = this.devHubConfig.sfdcLoginUrl;
+    this.devHubDir = DEVHUB_DIR(BASE_DIR, this.devHubConfig.hubOrgAdminUsername);
+    const sfdxProjectFile = mkdirSync(this.devHubDir) + '/sfdx-project.json';
+    fs.writeFileSync(sfdxProjectFile, JSON.stringify(sfdxProject, null, 4));
     await this.createScratchOrg();
     this.ux.log(chalk.green.bold(msgs.getMessage('create.completedCreatingCommunity')));
     this.ux.log(chalk.green.bold(msgs.getMessage('create.allDoneProceedCreatingNewStore', ['b2c:store:create'])));
@@ -137,7 +146,10 @@ export class ScratchOrgCreate extends SfdxCommand {
         `sfdx force:org:create -f ${CONFIG_DIR()}/${this.devHubConfig.type.toLowerCase()}-project-scratch-def.json ` +
           `username="${this.devHubConfig.scratchOrgAdminUsername}" -d 30 ` +
           `--apiversion="${this.devHubConfig.apiVersion}" -a "${this.devHubConfig.scratchOrgAlias}" -s ` +
-          `-v "${this.devHubConfig.hubOrgAdminUsername}" -w 15 --json`
+          `-v "${this.devHubConfig.hubOrgAdminUsername}" -w 15 --json`,
+        null,
+        this.devHubDir ? this.devHubDir : BASE_DIR,
+        { SFDX_AUDIENCE_URL: this.devHubConfig.instanceUrl }
       );
       this.ux.setSpinnerStatus(chalk.green(JSON.stringify(res)));
       await statusManager.setValue(this.devHubConfig, 2, 'created', true);
