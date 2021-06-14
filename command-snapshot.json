@@ -21,7 +21,8 @@
       "loglevel",
       "scratch-org-admin-username",
       "scratch-org-alias",
-      "scratch-org-number"
+      "scratch-org-number",
+      "type"
     ]
   },
   {
@@ -29,12 +30,14 @@
     "plugin": "commerce",
     "flags": [
       "configuration",
+      "definitionfile",
       "json",
       "loglevel",
       "scratch-org-admin-username",
       "scratch-org-number",
       "scratch-org-store-name",
-      "store-number"
+      "store-number",
+      "type"
     ]
   }
 ]
