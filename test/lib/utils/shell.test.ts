@@ -9,6 +9,7 @@ import { shell, shellJsonSfdx } from '../../../src/lib/utils/shell';
 
 describe('Shell', () => {
   it('should execute and correctly output sfdx force --json', async function () {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     this.timeout(20000);
     const res = shell('sfdx force --json', null);
     assert.ok(res.res.indexOf('result') >= 0);
@@ -16,6 +17,7 @@ describe('Shell', () => {
 });
 describe('Shell Json Sfdx', () => {
   it('should get api version in an object', async function () {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     this.timeout(20000);
     const res = shellJsonSfdx<{ apiVersion }>('sfdx force');
     assert.ok(res.result.apiVersion);
