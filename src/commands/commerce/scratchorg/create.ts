@@ -139,6 +139,7 @@ export class ScratchOrgCreate extends SfdxCommand {
         msgs.getMessage('create.scratchOrgAdminUsername', [this.devHubConfig.scratchOrgAdminUsername]) +
         msgs.getMessage('create.thisMayTakeAFewMins')
     );
+    this.ux.log(`${CONFIG_DIR()}/${this.devHubConfig.type.toLowerCase()}-project-scratch-def.json`);
     this.ux.startSpinner(msgs.getMessage('create.creatingNewScratchOrg'));
     try {
       this.ux.setSpinnerStatus(msgs.getMessage('create.using', ['sfdx force:org:create']));

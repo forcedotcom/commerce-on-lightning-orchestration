@@ -94,6 +94,7 @@ export const replaceErrors = (key, value) => {
 };
 /* eslint-disable */
 export class DevHubConfig {
+  public storeType: string;
   public definitionfile: string;
   public type: string; // b2c or b2b
   public clientId: string;

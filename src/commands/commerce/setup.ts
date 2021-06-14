@@ -59,13 +59,15 @@ export class Setup extends SfdxCommand {
     }),
     type: flags.string({
       char: 'c',
-      default: 'b2c',
+      options: ['b2c', 'b2b', 'both'],
+      parse: (input) => input.toLowerCase(),
+      default: 'both',
       description: 'The type of store you want to create',
     }),
     definitionfile: flags.filepath({
       char: 'f',
       default: CONFIG_DIR() + '/store-scratch-def.json',
-      description: messages.getMessage('convertFlags.configFileDescription'),
+      description: 'store scratch def',
     }),
   };
 
@@ -116,7 +118,11 @@ export class Setup extends SfdxCommand {
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
         output = shellJsonSfdx(
-          `sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} -v ${devHubConfig.hubOrgAdminUsername} -c ${devHubConfig.type} -t ${devHubConfig.definitionfile}`
+          'sfdx commerce:store:create ' +
+            `-u ${devHubConfig.scratchOrgAdminUsername} ` +
+            `-v ${devHubConfig.hubOrgAdminUsername} ` +
+            `-d ${devHubConfig.storeType} ` +
+            `-f ${devHubConfig.definitionfile}`
         );
         if (!output)
           throw new SfdxError(
