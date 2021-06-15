@@ -121,8 +121,16 @@ export class Setup extends SfdxCommand {
           'sfdx commerce:store:create ' +
             `-u ${devHubConfig.scratchOrgAdminUsername} ` +
             `-v ${devHubConfig.hubOrgAdminUsername} ` +
-            `-d ${devHubConfig.storeType} ` +
-            `-f ${devHubConfig.definitionfile}`
+            `-o ${devHubConfig.storeType} ` +
+            `-f ${devHubConfig.definitionfile} ` +
+            `-t ${devHubConfig.templateName} ` +
+            `-b ${devHubConfig.scratchOrgBuyerUsername} ` +
+            `buyerEmail=${devHubConfig.buyerEmail} ` +
+            `existingBuyerAuthentication=${devHubConfig.existingBuyerAuthentication} ` +
+            `buyerAlias=${devHubConfig.buyerAlias} ` +
+            `communityNetworkName=${devHubConfig.communityNetworkName} ` +
+            `communitySiteName=${devHubConfig.communitySiteName} ` +
+            `communityExperienceBundleName=${devHubConfig.communityExperienceBundleName} `
         );
         if (!output)
           throw new SfdxError(
