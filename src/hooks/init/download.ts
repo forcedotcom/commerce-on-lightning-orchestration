@@ -7,7 +7,7 @@
 import { Hook } from '@oclif/config';
 import { fs } from '@salesforce/core';
 import { B_DIR, BASE_DIR } from '../../lib/utils/constants/properties';
-import { copyFolderRecursiveSync, mkdirSync, remove } from '../../lib/utils/fsUtils';
+import { copyFolderRecursiveSync, mkdirSync } from '../../lib/utils/fsUtils';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const hook: Hook<'init'> = async () => {
@@ -15,7 +15,6 @@ export const hook: Hook<'init'> = async () => {
   mkdirSync(BASE_DIR);
   const dirs = ['config'];
   dirs.forEach((d) => {
-    remove(BASE_DIR + '/' + d);
     copyFolderRecursiveSync(B_DIR + '/' + d, BASE_DIR);
   });
   const files = ['devhub-configuration.json', 'sfdx-project.json']; // fs.linkSync

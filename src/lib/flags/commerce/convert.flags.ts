@@ -11,7 +11,7 @@ import { BASE_DIR, EXAMPLE_DIR } from '../../utils/constants/properties';
 Messages.importMessagesDirectory(__dirname);
 
 const TOPIC = 'examples';
-const messages = Messages.loadMessages('commerce', TOPIC);
+const messages = Messages.loadMessages('commerce-orchestration', TOPIC);
 
 export const exampleFlags = {
   'config-file': flags.filepath({

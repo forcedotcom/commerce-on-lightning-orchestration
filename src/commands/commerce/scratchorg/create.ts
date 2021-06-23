@@ -26,7 +26,7 @@ Messages.importMessagesDirectory(__dirname);
 
 const TOPIC = 'scratchorg';
 const CMD = `commerce:${TOPIC}:create`;
-const msgs = Messages.loadMessages('commerce', TOPIC);
+const msgs = Messages.loadMessages('commerce-orchestration', TOPIC);
 
 export class ScratchOrgCreate extends SfdxCommand {
   public static description = msgs.getMessage('create.cmdDescription');
@@ -110,7 +110,7 @@ export class ScratchOrgCreate extends SfdxCommand {
     fs.writeFileSync(sfdxProjectFile, JSON.stringify(sfdxProject, null, 4));
     await this.createScratchOrg();
     this.ux.log(chalk.green.bold(msgs.getMessage('create.completedCreatingCommunity')));
-    this.ux.log(chalk.green.bold(msgs.getMessage('create.allDoneProceedCreatingNewStore', ['b2c:store:create'])));
+    this.ux.log(chalk.green.bold(msgs.getMessage('create.allDoneProceedCreatingNewStore', ['commerce:store:create'])));
     return { scratchOrgCreated: true };
   }
   private async getScratchOrg(): Promise<Org> {

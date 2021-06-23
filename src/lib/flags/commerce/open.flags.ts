@@ -9,7 +9,7 @@ import { Messages } from '@salesforce/core';
 
 const TOPIC = 'open';
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('commerce', TOPIC);
+const messages = Messages.loadMessages('commerce-orchestration', TOPIC);
 
 export const openFlags = {
   editor: flags.string({

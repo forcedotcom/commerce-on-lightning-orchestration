@@ -20,10 +20,10 @@ Messages.importMessagesDirectory(__dirname);
 
 const TOPIC = 'commerce';
 const CMD = 'commerce:setup';
-const messages = Messages.loadMessages('commerce', TOPIC);
-const storeMessages = Messages.loadMessages('commerce', 'store');
-const scratchorgMessages = Messages.loadMessages('commerce', 'scratchorg');
-const devhubMessages = Messages.loadMessages('commerce', 'devhub');
+const messages = Messages.loadMessages('commerce-orchestration', TOPIC);
+const storeMessages = Messages.loadMessages('commerce-orchestration', 'store');
+const scratchorgMessages = Messages.loadMessages('commerce-orchestration', 'scratchorg');
+const devhubMessages = Messages.loadMessages('commerce-orchestration', 'devhub');
 
 export class Setup extends SfdxCommand {
   public static description = messages.getMessage('setup.cmdDescription');
@@ -58,7 +58,7 @@ export class Setup extends SfdxCommand {
       description: storeMessages.getMessage('setup.storeNumberDescription'),
     }),
     type: flags.string({
-      char: 'c',
+      char: 'o',
       options: ['b2c', 'b2b', 'both'],
       parse: (input) => input.toLowerCase(),
       default: 'both',
@@ -117,20 +117,21 @@ export class Setup extends SfdxCommand {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
-        output = shellJsonSfdx(
+        output = shell(
           'sfdx commerce:store:create ' +
             `-u ${devHubConfig.scratchOrgAdminUsername} ` +
             `-v ${devHubConfig.hubOrgAdminUsername} ` +
-            `-o ${devHubConfig.storeType} ` +
-            `-f ${devHubConfig.definitionfile} ` +
-            `-t ${devHubConfig.templateName} ` +
-            `-b ${devHubConfig.scratchOrgBuyerUsername} ` +
-            `buyerEmail=${devHubConfig.buyerEmail} ` +
-            `existingBuyerAuthentication=${devHubConfig.existingBuyerAuthentication} ` +
-            `buyerAlias=${devHubConfig.buyerAlias} ` +
-            `communityNetworkName=${devHubConfig.communityNetworkName} ` +
-            `communitySiteName=${devHubConfig.communitySiteName} ` +
-            `communityExperienceBundleName=${devHubConfig.communityExperienceBundleName} `
+            `-n ${devHubConfig.storeName} ` // +
+          // `-o ${devHubConfig.storeType} ` +
+          // `-f ${devHubConfig.definitionfile} ` +
+          // `-t ${devHubConfig.templateName} ` +
+          // `-b ${devHubConfig.scratchOrgBuyerUsername} ` +
+          // `buyerEmail=${devHubConfig.buyerEmail} ` +
+          // `existingBuyerAuthentication=${devHubConfig.existingBuyerAuthentication} ` +
+          // `buyerAlias=${devHubConfig.buyerAlias} ` +
+          // `communityNetworkName=${devHubConfig.communityNetworkName} ` +
+          // `communitySiteName=${devHubConfig.communitySiteName} ` +
+          // `communityExperienceBundleName=${devHubConfig.communityExperienceBundleName} `
         );
         if (!output)
           throw new SfdxError(
@@ -143,7 +144,11 @@ export class Setup extends SfdxCommand {
           // install plugin if not installed... maybe ask user first?
           // TODO add this to requires
           shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
-          output = shellJsonSfdx('sfdx commerce:payments:quickstart:setup '); // TODO pass args payment-adapter, store-name
+          output = shellJsonSfdx(
+            'sfdx commerce:payments:quickstart:setup ' +
+              `-u ${devHubConfig.scratchOrgAdminUsername} ` +
+              `-v ${devHubConfig.hubOrgAdminUsername} `
+          ); // TODO pass args payment-adapter, store-name
           if (!output)
             throw new SfdxError(
               messages.getMessage('setup.errorPaymentsQuickstartSetup', [

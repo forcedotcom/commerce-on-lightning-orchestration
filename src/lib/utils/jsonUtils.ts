@@ -9,7 +9,7 @@ import { fs, Messages, SfdxError } from '@salesforce/core';
 import { convertKabobToCamel } from './stringUtils';
 
 Messages.importMessagesDirectory(__dirname);
-const msgs = Messages.loadMessages('commerce', 'commerce');
+const msgs = Messages.loadMessages('commerce-orchestration', 'commerce');
 // TODO dont' disable this linting
 /* eslint-disable */
 /**

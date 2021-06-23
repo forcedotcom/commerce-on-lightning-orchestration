@@ -1,5 +1,5 @@
 {
-  "name": "commerce",
+  "name": "commerce-orchestration",
   "version": "0.1.0",
   "author": "Jonathan Arndt",
   "bugs": "https://git.soma.salesforce.com/communities/1commerce/issues",
@@ -89,17 +89,8 @@
         "description": "Commands for 1commerce developers.",
         "subtopics": {
           "devhub": {},
-          "examples": {},
           "open": {},
-          "payments": {},
-          "products": {},
-          "scratchorg": {},
-          "store": {
-            "subtopics": {
-              "view": {},
-              "quickstart": {}
-            }
-          }
+          "scratchorg": {}
         }
       }
     },
@@ -142,7 +133,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "sf-husky-pre-commit && yarn run version",
+      "pre-commit": "sf-husky-pre-commit",
       "commit-msg": "sf-husky-commit-msg",
       "pre-push": "sf-husky-pre-push"
     }

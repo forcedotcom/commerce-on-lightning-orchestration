@@ -1,17 +1,17 @@
 [
   {
     "command": "commerce:devhub:auth",
-    "plugin": "commerce",
+    "plugin": "commerce-orchestration",
     "flags": ["client-id", "configuration", "json", "loglevel", "server-cert", "use-jwt"]
   },
   {
     "command": "commerce:open:devhubconfig",
-    "plugin": "commerce",
+    "plugin": "commerce-orchestration",
     "flags": ["editor", "json", "loglevel"]
   },
   {
     "command": "commerce:scratchorg:create",
-    "plugin": "commerce",
+    "plugin": "commerce-orchestration",
     "flags": [
       "api-version",
       "configuration",
@@ -27,7 +27,7 @@
   },
   {
     "command": "commerce:setup",
-    "plugin": "commerce",
+    "plugin": "commerce-orchestration",
     "flags": [
       "configuration",
       "definitionfile",

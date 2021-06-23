@@ -15,7 +15,7 @@ Messages.importMessagesDirectory(__dirname);
 
 const TOPIC = 'open';
 const CMD = `commerce:${TOPIC}:devhubconfig`;
-const messages = Messages.loadMessages('commerce', TOPIC);
+const messages = Messages.loadMessages('commerce-orchestration', TOPIC);
 
 export class OpenDevHubConfig extends SfdxCommand {
   public static description = messages.getMessage('devhubconfig.cmdDescription');

@@ -11,7 +11,13 @@ import chalk from 'chalk';
 import { AnyJson } from '@salesforce/ts-types';
 import { devHubFlags } from '../../../lib/flags/commerce/devhub.flags';
 import { filterFlags } from '../../../lib/utils/args/flagsUtils';
-import { ConnectAppResult, DevHubConfig, Org, parseJSONConfigWithFlags } from '../../../lib/utils/jsonUtils';
+import {
+  ConnectAppResult,
+  DevHubConfig,
+  OauthConfig,
+  Org,
+  parseJSONConfigWithFlags,
+} from '../../../lib/utils/jsonUtils';
 import { Requires } from '../../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../../lib/utils/shell';
 import { BASE_DIR, DEVHUB_DIR } from '../../../lib/utils/constants/properties';
@@ -20,7 +26,7 @@ import { Devhub, statusManager } from '../../../lib/utils/statusFileManager';
 
 const TOPIC = 'devhub';
 const CMD = `commerce:${TOPIC}:auth`;
-const msgs = Messages.loadMessages('commerce', TOPIC);
+const msgs = Messages.loadMessages('commerce-orchestration', TOPIC);
 
 export class DevhubAuth extends SfdxCommand {
   public static description = msgs.getMessage('auth.cmdDescription');
@@ -105,6 +111,7 @@ export class DevhubAuth extends SfdxCommand {
         new ConnectAppResult(),
         await statusManager.getValue(this.devHubConfig, new Devhub(), 'connectApp')
       );
+      if (!connectedApp.oauthConfig) connectedApp.oauthConfig = new OauthConfig();
       connectedApp.oauthConfig.consumerKey = orgInfo.result.clientId;
       connectedApp.success = true;
       await statusManager.setValue(this.devHubConfig, 1, 'connectApp', connectedApp);

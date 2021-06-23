@@ -10,7 +10,7 @@ import { BASE_DIR, STATUS_FILE } from './constants/properties';
 import { shellJsonSfdx } from './shell';
 
 Messages.importMessagesDirectory(__dirname);
-const msgs = Messages.loadMessages('commerce', 'commerce');
+const msgs = Messages.loadMessages('commerce-orchestration', 'commerce');
 
 /**
  * Builder pattern for command requirements or just call one method statically

@@ -11,7 +11,7 @@ import { BASE_DIR } from '../../utils/constants/properties';
 
 const TOPIC = 'devhub';
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('commerce', TOPIC);
+const messages = Messages.loadMessages('commerce-orchestration', TOPIC);
 
 export const devHubFlags = {
   configuration: flags.filepath({
