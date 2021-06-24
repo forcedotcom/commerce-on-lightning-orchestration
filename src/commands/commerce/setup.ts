@@ -117,6 +117,12 @@ export class Setup extends SfdxCommand {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
+        this.ux.log(
+          'Running ' +
+            `sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} ` +
+            `-v ${devHubConfig.hubOrgAdminUsername} ` +
+            `-n ${devHubConfig.storeName}`
+        );
         output = shell(
           'sfdx commerce:store:create ' +
             `-u ${devHubConfig.scratchOrgAdminUsername} ` +
@@ -146,8 +152,7 @@ export class Setup extends SfdxCommand {
           shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
           output = shellJsonSfdx(
             'sfdx commerce:payments:quickstart:setup ' +
-              `-u ${devHubConfig.scratchOrgAdminUsername} ` +
-              `-v ${devHubConfig.hubOrgAdminUsername} `
+              `-u ${devHubConfig.scratchOrgAdminUsername} -p ${devHubConfig.paymentAdapter}`
           ); // TODO pass args payment-adapter, store-name
           if (!output)
             throw new SfdxError(
