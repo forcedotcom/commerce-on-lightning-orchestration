@@ -1,6 +1,6 @@
 {
   "name": "commerce-orchestration",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Jonathan Arndt",
   "bugs": "https://git.soma.salesforce.com/communities/1commerce/issues",
   "dependencies": {
