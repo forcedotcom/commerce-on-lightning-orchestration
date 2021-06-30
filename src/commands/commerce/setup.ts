@@ -13,6 +13,7 @@ import { BASE_DIR, CONFIG_DIR } from '../../lib/utils/constants/properties';
 import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
+import { convertKabobToCamel } from '../../lib/utils/stringUtils';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -20,10 +21,11 @@ Messages.importMessagesDirectory(__dirname);
 
 const TOPIC = 'commerce';
 const CMD = 'commerce:setup';
-const messages = Messages.loadMessages('commerce-orchestration', TOPIC);
-const storeMessages = Messages.loadMessages('commerce-orchestration', 'store');
-const scratchorgMessages = Messages.loadMessages('commerce-orchestration', 'scratchorg');
-const devhubMessages = Messages.loadMessages('commerce-orchestration', 'devhub');
+const packageName = 'commerce-orchestration';
+const messages = Messages.loadMessages(packageName, TOPIC);
+const storeMessages = Messages.loadMessages(packageName, 'store');
+const scratchorgMessages = Messages.loadMessages(packageName, 'scratchorg');
+const devhubMessages = Messages.loadMessages(packageName, 'devhub');
 
 export class Setup extends SfdxCommand {
   public static description = messages.getMessage('setup.cmdDescription');
@@ -46,6 +48,11 @@ export class Setup extends SfdxCommand {
       char: 's',
       default: '1commerce',
       description: scratchorgMessages.getMessage('createFlags.scratchOrgStoreNameDescription'),
+    }),
+    templatename: flags.string({
+      char: 't',
+      default: 'b2c-lite-storefront',
+      description: messages.getMessage('setup.templateNameDescription'),
     }),
     'scratch-org-number': flags.integer({
       char: 'n',
@@ -117,28 +124,30 @@ export class Setup extends SfdxCommand {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
-        this.ux.log(
-          'Running ' +
-            `sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} ` +
-            `-v ${devHubConfig.hubOrgAdminUsername} ` +
-            `-n ${devHubConfig.storeName}`
-        );
-        output = shell(
-          'sfdx commerce:store:create ' +
-            `-u ${devHubConfig.scratchOrgAdminUsername} ` +
-            `-v ${devHubConfig.hubOrgAdminUsername} ` +
-            `-n ${devHubConfig.storeName} ` // +
-          // `-o ${devHubConfig.storeType} ` +
-          // `-f ${devHubConfig.definitionfile} ` +
-          // `-t ${devHubConfig.templateName} ` +
-          // `-b ${devHubConfig.scratchOrgBuyerUsername} ` +
-          // `buyerEmail=${devHubConfig.buyerEmail} ` +
-          // `existingBuyerAuthentication=${devHubConfig.existingBuyerAuthentication} ` +
-          // `buyerAlias=${devHubConfig.buyerAlias} ` +
-          // `communityNetworkName=${devHubConfig.communityNetworkName} ` +
-          // `communitySiteName=${devHubConfig.communitySiteName} ` +
-          // `communityExperienceBundleName=${devHubConfig.communityExperienceBundleName} `
-        );
+        const args = ['store-name', 'templatename', 'definitionfile', 'type', 'buyer-username'];
+        const vargs = [
+          'buyerEmail',
+          'existingBuyerAuthentication',
+          'buyerAlias',
+          'communityNetworkName',
+          'communitySiteName',
+          'communityExperienceBundleName',
+          'urlpathprefix',
+          'description',
+        ];
+        let cmd = `sfdx force:config:set apiVersion=${devHubConfig.apiVersion} && sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} -v ${devHubConfig.hubOrgAdminUsername} `;
+        args.forEach((a) => {
+          if (devHubConfig[convertKabobToCamel(a)])
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            cmd += `--${a} ${devHubConfig[convertKabobToCamel(a)]} `;
+        });
+        vargs.forEach((a) => {
+          if (devHubConfig[a])
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            cmd += `${a}=${devHubConfig[a]} `;
+        });
+        this.ux.log('Running ' + cmd);
+        output = shell(cmd);
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
