@@ -8,7 +8,7 @@ import { flags, SfdxCommand } from '@salesforce/command';
 import { Messages, SfdxError } from '@salesforce/core';
 import chalk from 'chalk';
 import { AnyJson } from '@salesforce/ts-types';
-import { addAllowedArgs, modifyArgFlag } from '../../lib/utils/args/flagsUtils';
+import { addAllowedArgs, isFlagPassed, modifyArgFlag } from '../../lib/utils/args/flagsUtils';
 import { BASE_DIR, CONFIG_DIR } from '../../lib/utils/constants/properties';
 import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
@@ -91,7 +91,7 @@ export class Setup extends SfdxCommand {
     }
     let devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
     await Requires.default(devHubConfig.instanceUrl).build();
-    this.ux.log(chalk.green('Authing up devhub'));
+    this.ux.log(chalk.green('Authing devhub'));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let output = await DevhubAuth.run(addAllowedArgs(this.argv, DevhubAuth), this.config);
     if (!output) return;
@@ -105,6 +105,7 @@ export class Setup extends SfdxCommand {
     if (scratchOrg < 0) scratchOrg = 0;
     for (scratchOrg; scratchOrg < scratchOrgTotal; scratchOrg++) {
       modifyArgFlag(['-n', '--scratch-org-number'], scratchOrg.toString(), this.argv);
+      this.flags['scratch-org-number'] = scratchOrg;
       devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       output = await ScratchOrgCreate.run(addAllowedArgs(this.argv, ScratchOrgCreate), this.config);
@@ -122,6 +123,7 @@ export class Setup extends SfdxCommand {
       }
       for (store; store < storeTotal; store++) {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
+        this.flags['store-number'] = store;
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
         const args = ['store-name', 'templatename', 'definitionfile', 'type', 'buyer-username'];
@@ -136,16 +138,18 @@ export class Setup extends SfdxCommand {
           'description',
         ];
         let cmd = `sfdx force:config:set apiVersion=${devHubConfig.apiVersion} && sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} -v ${devHubConfig.hubOrgAdminUsername} `;
-        args.forEach((a) => {
-          if (devHubConfig[convertKabobToCamel(a)])
+        args
+          .filter((a) => devHubConfig[convertKabobToCamel(a)] && isFlagPassed(`--${a}`, this.argv, scratchOrg, store))
+          .forEach((a) => {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             cmd += `--${a} ${devHubConfig[convertKabobToCamel(a)]} `;
-        });
-        vargs.forEach((a) => {
-          if (devHubConfig[a])
+          });
+        vargs
+          .filter((a) => devHubConfig[a] && isFlagPassed(`--${a}`, this.argv, scratchOrg, store))
+          .forEach((a) => {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             cmd += `${a}=${devHubConfig[a]} `;
-        });
+          });
         this.ux.log('Running ' + cmd);
         output = shell(cmd);
         if (!output)

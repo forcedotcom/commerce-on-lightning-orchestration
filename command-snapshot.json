@@ -37,6 +37,7 @@
       "scratch-org-number",
       "scratch-org-store-name",
       "store-number",
+      "templatename",
       "type"
     ]
   }

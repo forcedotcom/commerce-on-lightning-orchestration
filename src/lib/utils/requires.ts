@@ -20,7 +20,7 @@ export class Requires {
   private commands: CMD[] = [];
 
   public static default(instanceURL: string): Requires {
-    return new Requires().serverRunning(instanceURL);
+    return new Requires(); // .serverRunning(instanceURL);
   }
 
   public static async serverRunning(instanceURL = 'http://localhost:6109'): Promise<void> {
