@@ -1,8 +1,8 @@
 {
   "name": "commerce-orchestration",
-  "version": "234.0.0",
+  "version": "232.0.0",
   "author": "Jonathan Arndt",
-  "bugs": "https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration/issues",
+  "bugs": "https://github.com/forcedotcom/commerce-on-lightning-orchestration/issues",
   "dependencies": {
     "@mshanemc/plugin-helpers": "^2.1.0",
     "@oclif/command": "^1",
@@ -70,7 +70,7 @@
     "/oclif.manifest.json",
     "/.oclif.manifest.json"
   ],
-  "homepage": "https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration",
+  "homepage": "https://github.com/forcedotcom/commerce-on-lightning-orchestration",
   "keywords": [
     "force",
     "salesforce",
@@ -101,7 +101,7 @@
       "init": "./lib/hooks/init/download"
     }
   },
-  "repository": "https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration",
+  "repository": "https://github.com/forcedotcom/commerce-on-lightning-orchestration",
   "scripts": {
     "build": "sf-build",
     "clean": "sf-clean",

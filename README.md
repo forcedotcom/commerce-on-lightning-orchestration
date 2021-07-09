@@ -41,7 +41,7 @@ See below for the full list of commands.
 
 ```
 $ yarn install
-$ bin/run b2c
+$ bin/run commerce
 ```
 
 ### When you’re ready to test-drive your plug-in from local git repo, link your git repo to Salesforce CLI.
