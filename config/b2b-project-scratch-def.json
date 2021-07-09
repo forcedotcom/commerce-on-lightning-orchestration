@@ -1,7 +1,7 @@
 {
   "orgName": "Test B2B Company",
   "edition": "Developer",
-  "features": ["Communities", "B2BCommerce", "OrderManagement", "EnableSetPasswordInApi", "CommerceNewProductImporter"],
+  "features": ["Communities", "B2BCommerce", "OrderManagement", "EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true

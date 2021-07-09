@@ -1,13 +1,7 @@
 {
   "orgName": "Test B2C Company",
   "edition": "Developer",
-  "features": [
-    "Communities",
-    "B2CCommerceGMV",
-    "PersonAccounts",
-    "EnableSetPasswordInApi",
-    "CommerceNewProductImporter"
-  ],
+  "features": ["Communities", "B2CCommerceGMV", "PersonAccounts", "EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
