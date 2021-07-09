@@ -91,7 +91,7 @@ export class Setup extends SfdxCommand {
     }
     let devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
     await Requires.default(devHubConfig.instanceUrl).build();
-    this.ux.log(chalk.green('Authing up devhub'));
+    this.ux.log(chalk.green('Authing devhub'));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let output = await DevhubAuth.run(addAllowedArgs(this.argv, DevhubAuth), this.config);
     if (!output) return;

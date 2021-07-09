@@ -7,8 +7,7 @@
     "B2CCommerceGMV",
     "PersonAccounts",
     "OrderManagement",
-    "EnableSetPasswordInApi",
-    "CommerceNewProductImporter"
+    "EnableSetPasswordInApi"
   ],
   "settings": {
     "lightningExperienceSettings": {
