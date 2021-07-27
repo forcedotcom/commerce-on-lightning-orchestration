@@ -96,7 +96,7 @@ export class ScratchOrgCreate extends SfdxCommand {
       ScratchOrgCreate.flagsConfig,
       this.flags
     );
-    await Requires.default(this.devHubConfig.instanceUrl).build();
+    await Requires.default(/* this.devHubConfig.instanceUrl*/).build();
     this.ux.log(msgs.getMessage('create.usingScratchOrgAdmin', [this.devHubConfig.scratchOrgAdminUsername]));
     if (!getOrgInfo(this.devHubConfig.hubOrgAdminUsername))
       // TODO add this as a require, ie requires devhub

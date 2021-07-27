@@ -40,7 +40,7 @@ export class DevhubAuth extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
     this.devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, DevhubAuth.flagsConfig, this.flags);
-    await Requires.default(this.devHubConfig.instanceUrl).build();
+    await Requires.default(/* this.devHubConfig.instanceUrl*/).build();
     if (this.devHubConfig.useJwt) {
       await this.createConnectedApp();
       await this.authJwtGrant();
