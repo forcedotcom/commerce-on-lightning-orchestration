@@ -19,7 +19,7 @@ const msgs = Messages.loadMessages('commerce-orchestration', 'commerce');
 export class Requires {
   private commands: CMD[] = [];
 
-  public static default(instanceURL: string): Requires {
+  public static default(/* instanceURL: string*/): Requires {
     return new Requires(); // .serverRunning(instanceURL);
   }
 

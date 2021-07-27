@@ -90,7 +90,7 @@ export class Setup extends SfdxCommand {
       this.flags['store-number'] = 0;
     }
     let devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
-    await Requires.default(devHubConfig.instanceUrl).build();
+    await Requires.default(/* devHubConfig.instanceUrl*/).build();
     this.ux.log(chalk.green('Authing devhub'));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let output = await DevhubAuth.run(addAllowedArgs(this.argv, DevhubAuth), this.config);
@@ -125,6 +125,7 @@ export class Setup extends SfdxCommand {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
         this.flags['store-number'] = store;
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
+        if (devHubConfig.type === 'both') devHubConfig.type = 'b2c';
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
         const args = ['store-name', 'templatename', 'definitionfile', 'type', 'buyer-username'];
         const vargs = [
