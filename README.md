@@ -24,7 +24,7 @@ First install the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcl
 Next install the commerce orchestration plugin
 
 ```
-echo y | sfdx plugins:install ssh://git@git.soma.salesforce.com:communities/commerce-on-lightning-orchestration.git
+echo y | sfdx plugins:install ssh://git@github.com:forcedotcom/commerce-on-lightning-orchestration.git
 ```
 
 Now, you can run the commerce commands.
