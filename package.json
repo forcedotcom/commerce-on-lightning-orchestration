@@ -1,6 +1,6 @@
 {
   "name": "commerce-orchestration",
-  "version": "232.0.0",
+  "version": "232.0.1",
   "author": "Jonathan Arndt",
   "bugs": "https://github.com/forcedotcom/commerce-on-lightning-orchestration/issues",
   "dependencies": {
@@ -116,7 +116,7 @@
     "postpublish": "yarn run clean; git push; git push --tags",
     "posttest": "yarn lint && yarn test:deprecation-policy && yarn test:command-reference",
     "precommit": "npm run clean && npm run build && npm run lint && npm run version",
-    "prepack": "sf-prepack",
+    "prepare": "yarn run build && oclif-dev manifest",
     "prepare": "sf-install",
     "prepublishOnly": "yarn run build && oclif-dev manifest",
     "pretest": "sf-compile-test",
