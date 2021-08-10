@@ -36,10 +36,10 @@ export function isFlagPassed(
   // much harder to tell since the file has different layers ie devhub (global), scrt and store
   // so i need to read the original config file then go to the nm location
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const conf: DevHubConfig = Object.assign(DevHubConfig, JSON.parse(fs.readFileSync(config).toString()));
-  if (conf[convertKabobToCamel(flag.replace(/^--/g, ''))]) return true;
-  if (conf.scratchOrgs[n][convertKabobToCamel(flag.replace(/^--/g, ''))]) return true;
-  if (conf.scratchOrgs[n].stores[m][convertKabobToCamel(flag.replace(/^--/g, ''))]) return true;
+  const conf: DevHubConfig = Object.assign(new DevHubConfig(), JSON.parse(fs.readFileSync(config).toString()));
+  if (conf[convertKabobToCamel(flag.replace(/^--/g, ''))] || conf['scratchOrg'+convertKabobToCamel(flag.replace(/^--/g, ''))]) return true;
+  if (conf.scratchOrgs[n][convertKabobToCamel(flag.replace(/^--/g, ''))] || conf['scratchOrg'+convertKabobToCamel(flag.replace(/^--/g, ''))]) return true;
+  if (conf.scratchOrgs[n].stores[m][convertKabobToCamel(flag.replace(/^--/g, ''))] || conf['scratchOrg'+convertKabobToCamel(flag.replace(/^--/g, ''))]) return true;
   return false;
 }
 
