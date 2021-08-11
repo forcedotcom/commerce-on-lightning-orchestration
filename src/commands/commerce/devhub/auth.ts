@@ -53,13 +53,13 @@ export class DevhubAuth extends SfdxCommand {
     if (await this.isDevhubConnected()) return;
     this.ux.log(chalk.green.bold(msgs.getMessage('auth.checkSync', [`${instanceUrl}`, `${hubOrgAlias}`])));
     this.ux.startSpinner(msgs.getMessage('auth.authenticating'));
-    this.ux.setSpinnerStatus(msgs.getMessage('auth.authingWith', ['sfdx alt:auth:pass']));
-    // TODO consider sfdx-waw-plugin here waw:auth:username:login
-    let output = shellJsonSfdx(
+    const cmd =
       `sfdx auth:web:login -d -a "${hubOrgAlias}" -r "${instanceUrl}" ${
         this.devHubConfig.clientId ? '-i ' + this.devHubConfig.clientId : ''
-      }` + (this.devHubConfig.sfdcLoginUrl ? ` --instanceurl "${this.devHubConfig.sfdcLoginUrl}"` : '')
-    );
+      }` + (this.devHubConfig.sfdcLoginUrl ? ` --instanceurl "${this.devHubConfig.sfdcLoginUrl}"` : '');
+    this.ux.setSpinnerStatus(msgs.getMessage('auth.authingWith', [cmd]));
+    // TODO consider sfdx-waw-plugin here waw:auth:username:login
+    let output = shellJsonSfdx(cmd);
     this.ux.stopSpinner('Done Authenticating.');
     if (output.status === 0 && (!output.result || Object.keys(output.result).length === 0)) {
       this.ux.log('\n\n');
