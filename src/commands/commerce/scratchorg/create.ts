@@ -143,6 +143,7 @@ export class ScratchOrgCreate extends SfdxCommand {
     this.ux.startSpinner(msgs.getMessage('create.creatingNewScratchOrg'));
     try {
       this.ux.setSpinnerStatus(msgs.getMessage('create.using', ['sfdx force:org:create']));
+      mkdirSync(this.devHubDir ? this.devHubDir : BASE_DIR);
       const res = shellJsonSfdx(
         `sfdx force:org:create -f ${CONFIG_DIR()}/${this.devHubConfig.type.toLowerCase()}-project-scratch-def.json ` +
           `username="${this.devHubConfig.scratchOrgAdminUsername}" -d 30 ` +
