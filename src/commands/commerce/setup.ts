@@ -16,7 +16,6 @@ import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
-// import { ScratchOrgCre } from './scratchorg/create';
 
 Messages.importMessagesDirectory(__dirname);
 
