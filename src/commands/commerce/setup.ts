@@ -16,6 +16,7 @@ import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
+// import { ScratchOrgCre } from './scratchorg/create';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -160,7 +161,9 @@ export class Setup extends SfdxCommand {
             cmd += `${a}=${devHubConfig[a]} `;
           });
         this.ux.log('Running ' + cmd);
+        await ScratchOrgCreate.modifyCDNAccessPerm(devHubConfig.scratchOrgAdminUsername, this.ux, 'remove');
         output = shell(cmd);
+        await ScratchOrgCreate.modifyCDNAccessPerm(devHubConfig.scratchOrgAdminUsername, this.ux, 'add');
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [

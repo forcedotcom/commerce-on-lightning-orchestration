@@ -90,6 +90,54 @@ export class ScratchOrgCreate extends SfdxCommand {
       ux.stopSpinner(msgs.getMessage('create.permsEnabled'));
     }
   }
+
+  public static async modifyCDNAccessPerm(scratchOrgAdminUsername, ux, modifier) : Promise<void> {
+    if (!ux) {
+      ux = console;
+      ux['setSpinnerStatus'] = console.log;
+      ux['stopSpinner'] = console.log;
+      ux['startSpinner'] = console.log;
+    }
+    ux.startSpinner('Updating required permissions');
+    const browser = await puppeteer.launch({
+      headless: !this.flags.showbrowser,
+      args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
+      ignoreHTTPSErrors: true
+    });
+    const openResponse = await shellJsonSfdx(`sfdx force:org:open -p /qa/hoseMyOrgPleaseSir.jsp -u "${scratchOrgAdminUsername}" -r --json`);
+    const url = openResponse.result['url'];
+    const page = await browser.newPage();
+    ux.setSpinnerStatus(`opening ${url}`);
+    await page.goto(url);
+    ux.setSpinnerStatus(msgs.getMessage('create.waitingForStringToLoad', ['hoseMyOrgPleaseSir.jsp']));
+    await page.waitForSelector('label', { timeout: 10000 });
+    if (modifier === 'remove') {
+      try {
+        await page.evaluate(_ => {
+          Array.from(document.querySelectorAll('label'))
+              .filter(e => ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(e.innerText) >= 0)
+              .forEach(e => e.previousSibling['checked'] = '');
+        });
+        await page.click("input[value='Save']", {delay: 5000});
+      } finally {
+        await browser.close();
+        ux.stopSpinner(msgs.getMessage('create.permsDisabled'));
+      }
+    } else {
+      try {
+        await page.evaluate(_ => {
+          Array.from(document.querySelectorAll('label'))
+              .filter(e => ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(e.innerText) >= 0)
+              .forEach(e => e.previousSibling['checked'] = 'checked');
+        });
+        await page.click("input[value='Save']", {delay: 5000});
+      } finally {
+        await browser.close();
+      }
+    }
+  }
+
+
   public async run(): Promise<AnyJson> {
     this.devHubConfig = await parseJSONConfigWithFlags(
       this.flags.configuration,
