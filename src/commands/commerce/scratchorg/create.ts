@@ -90,6 +90,72 @@ export class ScratchOrgCreate extends SfdxCommand {
       ux.stopSpinner(msgs.getMessage('create.permsEnabled'));
     }
   }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  public static async modifyCDNAccessPerm(scratchOrgAdminUsername: string, ux, modifier: string): Promise<void> {
+    if (!ux) {
+      ux = console;
+      /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
+      ux['setSpinnerStatus'] = console.log;
+      ux['stopSpinner'] = console.log;
+      ux['startSpinner'] = console.log;
+      /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    ux.startSpinner('Updating required permissions');
+    const browser = await puppeteer.launch({
+      headless: !this.flags.showbrowser,
+      args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
+      ignoreHTTPSErrors: true,
+    });
+    const openResponse = shellJsonSfdx(
+      `sfdx force:org:open -p /qa/hoseMyOrgPleaseSir.jsp -u "${scratchOrgAdminUsername}" -r --json`
+    );
+    const url = openResponse.result['url'] as string;
+    const page = await browser.newPage();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    ux.setSpinnerStatus(`opening ${url}`);
+    await page.goto(url);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    ux.setSpinnerStatus(msgs.getMessage('create.waitingForStringToLoad', ['hoseMyOrgPleaseSir.jsp']));
+    await page.waitForSelector('label', { timeout: 10000 });
+    if (modifier === 'remove') {
+      try {
+        await page.evaluate((_) => {
+          Array.from(document.querySelectorAll('label'))
+            .filter(
+              (e) =>
+                ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(
+                  e.innerText
+                ) >= 0
+            )
+            .forEach((e) => (e.previousSibling['checked'] = ''));
+        });
+        await page.click("input[value='Save']", { delay: 5000 });
+      } finally {
+        await browser.close();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        ux.stopSpinner(msgs.getMessage('create.permsDisabled'));
+      }
+    } else {
+      try {
+        await page.evaluate((_) => {
+          Array.from(document.querySelectorAll('label'))
+            .filter(
+              (e) =>
+                ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(
+                  e.innerText
+                ) >= 0
+            )
+            .forEach((e) => (e.previousSibling['checked'] = 'checked'));
+        });
+        await page.click("input[value='Save']", { delay: 5000 });
+      } finally {
+        await browser.close();
+      }
+    }
+  }
+
   public async run(): Promise<AnyJson> {
     this.devHubConfig = await parseJSONConfigWithFlags(
       this.flags.configuration,
