@@ -127,6 +127,7 @@ export class DevHubConfig {
   public sfdcLoginUrl: string;
   public configFile: string;
   public serverCert: string;
+  public orgCreateDir: string;
 }
 export class ScratchOrgConfig {
   public scratchOrgAdminUsername: string;

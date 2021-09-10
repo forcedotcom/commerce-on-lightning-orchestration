@@ -150,7 +150,10 @@ export class ScratchOrgCreate extends SfdxCommand {
           `--apiversion="${this.devHubConfig.apiVersion}" -a "${this.devHubConfig.scratchOrgAlias}" -s ` +
           `-v "${this.devHubConfig.hubOrgAdminUsername}" -w 15 --json`,
         null,
-        this.devHubDir ? this.devHubDir : BASE_DIR,
+        this.devHubConfig.orgCreateDir
+          ? this.devHubConfig.orgCreateDir.replace('$(BASE_DIR)', BASE_DIR).replace('$(DEV_HUB_DIR)', this.devHubDir)
+          : '/tmp',
+        // this.devHubDir ? this.devHubDir : BASE_DIR,
         { SFDX_AUDIENCE_URL: this.devHubConfig.instanceUrl }
       );
       this.ux.setSpinnerStatus(chalk.green(JSON.stringify(res)));
