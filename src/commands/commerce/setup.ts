@@ -166,7 +166,7 @@ export class Setup extends SfdxCommand {
         const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
           devHubConfig.scratchOrgAdminUsername,
           this.ux,
-          Messages.loadMessages('commerce-orchestration', 'commerce:scratchorg:create'),
+          scratchorgMessages,
           options
         );
         await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
