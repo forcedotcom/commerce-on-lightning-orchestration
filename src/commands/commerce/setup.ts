@@ -14,6 +14,7 @@ import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
+import { PuppeteerHoseMyOrg } from '../../lib/utils/puppeteerHoseMyOrg';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -160,9 +161,17 @@ export class Setup extends SfdxCommand {
             cmd += `${a}=${devHubConfig[a]} `;
           });
         this.ux.log('Running ' + cmd);
-        await ScratchOrgCreate.modifyCDNAccessPerm(devHubConfig.scratchOrgAdminUsername, this.ux, 'remove');
+        const options = { headless: !devHubConfig.showBrowser };
+        if (devHubConfig.puppeteerBrowserPath) options['executablePath'] = devHubConfig.puppeteerBrowserPath;
+        const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
+          devHubConfig.scratchOrgAdminUsername,
+          this.ux,
+          Messages.loadMessages('commerce-orchestration', 'commerce:scratchorg:create'),
+          options
+        );
+        await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
         output = shell(cmd);
-        await ScratchOrgCreate.modifyCDNAccessPerm(devHubConfig.scratchOrgAdminUsername, this.ux, 'add');
+        await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [

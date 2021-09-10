@@ -128,6 +128,8 @@ export class DevHubConfig {
   public configFile: string;
   public serverCert: string;
   public orgCreateDir: string;
+  public showBrowser: boolean = false;
+  public puppeteerBrowserPath: string;
 }
 export class ScratchOrgConfig {
   public scratchOrgAdminUsername: string;

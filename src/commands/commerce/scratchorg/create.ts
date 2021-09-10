@@ -7,7 +7,6 @@
 import { SfdxCommand } from '@salesforce/command';
 import { fs, Messages, SfdxError } from '@salesforce/core';
 import chalk from 'chalk';
-import puppeteer from 'puppeteer';
 import { AnyJson } from '@salesforce/ts-types';
 import { devHubFlags } from '../../../lib/flags/commerce/devhub.flags';
 import { scratchOrgFlags } from '../../../lib/flags/commerce/scratchorg.flags';
@@ -31,6 +30,7 @@ const msgs = Messages.loadMessages('commerce-orchestration', TOPIC);
 export class ScratchOrgCreate extends SfdxCommand {
   public static description = msgs.getMessage('create.cmdDescription');
   public static examples = [`sfdx ${CMD} --configuration devhub-configuration.json`];
+
   protected static flagsConfig = {
     ...filterFlags(['configuration', 'api-version', 'hub-org-admin-username'], devHubFlags),
     ...filterFlags(
@@ -44,117 +44,9 @@ export class ScratchOrgCreate extends SfdxCommand {
       scratchOrgFlags
     ),
   };
+
   private devHubConfig: DevHubConfig;
   private devHubDir: string;
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  public static async addB2CLiteAccessPerm(scratchOrgAdminUsername: string, ux): Promise<void> {
-    if (!ux) {
-      ux = console;
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
-      ux['setSpinnerStatus'] = console.log;
-      ux['stopSpinner'] = console.log;
-      ux['startSpinner'] = console.log;
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ux.startSpinner('Updating required permissions');
-    const browser = await puppeteer.launch({
-      headless: !this.flags.showbrowser,
-      args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
-      ignoreHTTPSErrors: true,
-    });
-    const openResponse = shellJsonSfdx(
-      `sfdx force:org:open -p /qa/hoseMyOrgPleaseSir.jsp -u "${scratchOrgAdminUsername}" -r --json`
-    );
-    const url = openResponse.result['url'] as string;
-    const page = await browser.newPage();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ux.setSpinnerStatus(`opening ${url}`);
-    await page.goto(url);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ux.setSpinnerStatus(msgs.getMessage('create.waitingForStringToLoad', ['hoseMyOrgPleaseSir.jsp']));
-    await page.waitForSelector('label', { timeout: 20000 });
-    try {
-      await page.evaluate(() => {
-        Array.from(document.querySelectorAll('label'))
-          .filter(
-            (e) => ['B2CLiteAccess', 'CommerceEnabled'].indexOf(e.innerText) >= 0 && !e.previousSibling['checked']
-          )
-          .forEach((e) => (e.previousSibling['checked'] = 'checked'));
-      });
-      await page.click("input[value='Save']");
-    } finally {
-      await browser.close();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      ux.stopSpinner(msgs.getMessage('create.permsEnabled'));
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  public static async modifyCDNAccessPerm(scratchOrgAdminUsername: string, ux, modifier: string): Promise<void> {
-    if (!ux) {
-      ux = console;
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
-      ux['setSpinnerStatus'] = console.log;
-      ux['stopSpinner'] = console.log;
-      ux['startSpinner'] = console.log;
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ux.startSpinner('Updating required permissions');
-    const browser = await puppeteer.launch({
-      headless: !this.flags.showbrowser,
-      args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
-      ignoreHTTPSErrors: true,
-    });
-    const openResponse = shellJsonSfdx(
-      `sfdx force:org:open -p /qa/hoseMyOrgPleaseSir.jsp -u "${scratchOrgAdminUsername}" -r --json`
-    );
-    const url = openResponse.result['url'] as string;
-    const page = await browser.newPage();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ux.setSpinnerStatus(`opening ${url}`);
-    await page.goto(url);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    ux.setSpinnerStatus(msgs.getMessage('create.waitingForStringToLoad', ['hoseMyOrgPleaseSir.jsp']));
-    await page.waitForSelector('label', { timeout: 10000 });
-    if (modifier === 'remove') {
-      try {
-        await page.evaluate((_) => {
-          Array.from(document.querySelectorAll('label'))
-            .filter(
-              (e) =>
-                ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(
-                  e.innerText
-                ) >= 0
-            )
-            .forEach((e) => (e.previousSibling['checked'] = ''));
-        });
-        await page.click("input[value='Save']", { delay: 5000 });
-      } finally {
-        await browser.close();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        ux.stopSpinner(msgs.getMessage('create.permsDisabled'));
-      }
-    } else {
-      try {
-        await page.evaluate((_) => {
-          Array.from(document.querySelectorAll('label'))
-            .filter(
-              (e) =>
-                ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(
-                  e.innerText
-                ) >= 0
-            )
-            .forEach((e) => (e.previousSibling['checked'] = 'checked'));
-        });
-        await page.click("input[value='Save']", { delay: 5000 });
-      } finally {
-        await browser.close();
-      }
-    }
-  }
 
   public async run(): Promise<AnyJson> {
     this.devHubConfig = await parseJSONConfigWithFlags(
@@ -227,13 +119,15 @@ export class ScratchOrgCreate extends SfdxCommand {
       this.ux.stopSpinner(msgs.getMessage('create.successfulOrgCreation'));
     } catch (e) {
       this.ux.stopSpinner(msgs.getMessage('create.failureOrgCreation'));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.ux.log(JSON.stringify(e.message, null, 4));
       if (cnt > 3) {
         await statusManager.setValue(this.devHubConfig, 2, 'created', JSON.parse(JSON.stringify(e, replaceErrors)));
         throw e;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
       if (e.message.indexOf('MyDomainResolverTimeoutError') >= 0) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         this.ux.log(JSON.stringify(e.message, null, 4));
         this.ux.startSpinner(msgs.getMessage('create.sleepingBeforeCheckingIfOrgIsCreated'));
         let count = 0;
@@ -249,13 +143,15 @@ export class ScratchOrgCreate extends SfdxCommand {
       } else {
         let message;
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
           message = JSON.parse(e.message);
         } catch (ee) {
           await statusManager.setValue(this.devHubConfig, 2, 'created', JSON.parse(JSON.stringify(e, replaceErrors)));
           throw e;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (message.name === 'DevhubNotAuthorized' || message.name === 'genericTimeoutMessage') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           this.log(chalk.red(msgs.getMessage('create.errorOccurredMightNeedDevhubAuth') + (message.message as string)));
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const isAuthed = await DevhubAuth.run(addAllowedArgs(this.argv, DevhubAuth), this.config);
@@ -264,12 +160,14 @@ export class ScratchOrgCreate extends SfdxCommand {
             throw new SfdxError(msgs.getMessage('create.authFailed'));
           }
           await this.createScratchOrg(++cnt);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         } else if (message.name === 'ACCESS_DENIED') {
           await statusManager.setValue(this.devHubConfig, 2, 'created', JSON.parse(JSON.stringify(e, replaceErrors)));
           throw e;
         } else if (
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           message.name === 'RemoteOrgSignupFailed' &&
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
           message.message.indexOf(msgs.getMessage('create.isAlreadyInUse')) < 0
         ) {
           await statusManager.setValue(this.devHubConfig, 2, 'created', JSON.parse(JSON.stringify(e, replaceErrors)));
@@ -277,13 +175,15 @@ export class ScratchOrgCreate extends SfdxCommand {
             msgs.getMessage('create.errorOccurredDuringOrgCreateMightNeedTMPAuth') + JSON.stringify(message, null, 4)
           );
         } else if (
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           message.name === 'RemoteOrgSignupFailed' &&
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
           message.message.indexOf(msgs.getMessage('create.pleaseTryAgain')) >= 0
         )
           await this.createScratchOrg(++cnt);
         else {
           await statusManager.setValue(this.devHubConfig, 2, 'created', JSON.parse(JSON.stringify(e, replaceErrors)));
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           throw new SfdxError(e.message);
         }
       }
