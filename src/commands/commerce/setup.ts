@@ -160,7 +160,9 @@ export class Setup extends SfdxCommand {
             cmd += `${a}=${devHubConfig[a]} `;
           });
         this.ux.log('Running ' + cmd);
+        await ScratchOrgCreate.modifyCDNAccessPerm(devHubConfig.scratchOrgAdminUsername, this.ux, 'remove');
         output = shell(cmd);
+        await ScratchOrgCreate.modifyCDNAccessPerm(devHubConfig.scratchOrgAdminUsername, this.ux, 'add');
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
