@@ -27,7 +27,7 @@ export class PuppeteerHoseMyOrg {
     ignoreHTTPSErrors: true,
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility,@typescript-eslint/explicit-module-boundary-types
   constructor(scratchOrgAdminUsername: string, ux, msgs, options) {
     this.scratchOrgAdminUsername = scratchOrgAdminUsername;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -43,6 +43,7 @@ export class PuppeteerHoseMyOrg {
     const page = puppeteerHoseMyOrg.page;
     const browser = puppeteerHoseMyOrg.browser;
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       await page.evaluate((_) => {
         Array.from(document.querySelectorAll('label'))
           .filter((e) => perms.indexOf(e.innerText) >= 0)
