@@ -83,8 +83,6 @@ export class PuppeteerHoseMyOrg {
     let pupOptions = this.puppeteerBrowserOptions;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     if (this.options) pupOptions = { ...pupOptions, ...this.options };
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    this.ux.log(pupOptions);
     const browser = await puppeteer.launch(pupOptions);
     const openResponse = shellJsonSfdx(
       `sfdx force:org:open -p /qa/hoseMyOrgPleaseSir.jsp -u "${this.scratchOrgAdminUsername}" -r --json`
