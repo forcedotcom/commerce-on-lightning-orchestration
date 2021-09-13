@@ -38,36 +38,14 @@ export class PuppeteerHoseMyOrg {
     this.msgs = msgs;
   }
 
-  public async addB2CLiteAccessPerm(): Promise<void> {
-    const puppeteerHoseMyOrg = await this.helper();
-    try {
-      await puppeteerHoseMyOrg.page.evaluate(() => {
-        Array.from(document.querySelectorAll('label'))
-          .filter(
-            (e) => ['B2CLiteAccess', 'CommerceEnabled'].indexOf(e.innerText) >= 0 && !e.previousSibling['checked']
-          )
-          .forEach((e) => (e.previousSibling['checked'] = 'checked'));
-      });
-      await puppeteerHoseMyOrg.page.click("input[value='Save']");
-    } finally {
-      await puppeteerHoseMyOrg.browser.close();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-      this.ux.stopSpinner(this.msgs.getMessage('create.permsEnabled'));
-    }
-  }
-
-  public async modifyCDNAccessPerm(isRemove: boolean): Promise<void> {
+  public async modifyPerms(perms: string[], isRemove: boolean): Promise<void> {
     const puppeteerHoseMyOrg = await this.helper();
     const page = puppeteerHoseMyOrg.page;
     const browser = puppeteerHoseMyOrg.browser;
     try {
       await page.evaluate((_) => {
         Array.from(document.querySelectorAll('label'))
-          .filter(
-            (e) =>
-              ['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'].indexOf(e.innerText) >=
-              0
-          )
+          .filter((e) => perms.indexOf(e.innerText) >= 0)
           .forEach((e) => (e.previousSibling['checked'] = isRemove ? '' : 'checked'));
       });
       await page.click("input[value='Save']", { delay: 5000 });
@@ -76,7 +54,17 @@ export class PuppeteerHoseMyOrg {
       if (isRemove)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
         this.ux.stopSpinner(this.msgs.getMessage('create.permsDisabled'));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+      else this.ux.stopSpinner(this.msgs.getMessage('create.permsEnabled'));
     }
+  }
+
+  public async addB2CLiteAccessPerm(): Promise<void> {
+    await this.modifyPerms(['B2CLiteAccess', 'CommerceEnabled'], false);
+  }
+
+  public async modifyCDNAccessPerm(isRemove: boolean): Promise<void> {
+    await this.modifyPerms(['ConnectCdnApiCacheEnabled', 'AcceptCdnRequestOnly', 'CdnSdcOnlyForSiteEnabled'], isRemove);
   }
 
   private async helper(): Promise<PuppeteerObj> {
@@ -86,6 +74,7 @@ export class PuppeteerHoseMyOrg {
       this.ux['setSpinnerStatus'] = console.log;
       this.ux['stopSpinner'] = console.log;
       this.ux['startSpinner'] = console.log;
+      this.ux['log'] = console.log;
       /* eslint-disable @typescript-eslint/no-unsafe-member-access,no-console */
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -93,6 +82,8 @@ export class PuppeteerHoseMyOrg {
     let pupOptions = this.puppeteerBrowserOptions;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     if (this.options) pupOptions = { ...pupOptions, ...this.options };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    this.ux.log(pupOptions);
     const browser = await puppeteer.launch(pupOptions);
     const openResponse = shellJsonSfdx(
       `sfdx force:org:open -p /qa/hoseMyOrgPleaseSir.jsp -u "${this.scratchOrgAdminUsername}" -r --json`
