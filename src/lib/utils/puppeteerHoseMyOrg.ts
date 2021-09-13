@@ -11,6 +11,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import puppeteer, { Browser, Page } from 'puppeteer';
+import { SfdxError } from '@salesforce/core';
 import { shellJsonSfdx } from './shell';
 
 export class PuppeteerHoseMyOrg {
@@ -23,7 +24,15 @@ export class PuppeteerHoseMyOrg {
   protected msgs: any;
 
   private puppeteerBrowserOptions = {
-    args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
+    args: [
+      '--no-sandbox',
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process',
+      '--ignore-certificate-errors',
+      '--disable-setuid-sandbox',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+    ],
     ignoreHTTPSErrors: true,
   };
 
@@ -94,7 +103,10 @@ export class PuppeteerHoseMyOrg {
     await page.goto(url);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.ux.setSpinnerStatus(this.msgs.getMessage('create.waitingForStringToLoad', ['hoseMyOrgPleaseSir.jsp']));
-    await page.waitForSelector('label', { timeout: 20000 });
+    await page.waitForSelector('label,tbody', { timeout: 20000 });
+    if ((await page.waitForXPath('//*[contains(text(), "URL No Longer Exists")]', { timeout: 20000 })) !== null) {
+      throw new SfdxError('URL No Longer Exists');
+    }
     return { browser, page };
   }
 }
