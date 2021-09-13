@@ -103,7 +103,7 @@ export class PuppeteerHoseMyOrg {
     await page.goto(url);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.ux.setSpinnerStatus(this.msgs.getMessage('create.waitingForStringToLoad', ['hoseMyOrgPleaseSir.jsp']));
-    await page.waitForSelector('label,tbody', { timeout: 20000 });
+    await page.waitForSelector('label,tbody', { timeout: 20000, visible: true });
     if ((await page.waitForXPath('//*[contains(text(), "URL No Longer Exists")]', { timeout: 20000 })) !== null) {
       throw new SfdxError('URL No Longer Exists');
     }
