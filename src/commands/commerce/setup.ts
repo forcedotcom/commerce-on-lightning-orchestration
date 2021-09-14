@@ -169,9 +169,11 @@ export class Setup extends SfdxCommand {
           scratchorgMessages,
           options
         );
-        await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(true));
         output = shell(cmd);
-        await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(false));
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
