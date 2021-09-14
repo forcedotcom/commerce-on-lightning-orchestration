@@ -170,10 +170,10 @@ export class Setup extends SfdxCommand {
           options
         );
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(true));
+        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(true), 60000);
         output = shell(cmd);
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(false));
+        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(false), 60000);
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
