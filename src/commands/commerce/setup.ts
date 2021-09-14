@@ -169,11 +169,17 @@ export class Setup extends SfdxCommand {
           scratchorgMessages,
           options
         );
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(true), 60000);
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(true), 60000);
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
         output = shell(cmd);
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(false), 60000);
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(false), 60000);
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
