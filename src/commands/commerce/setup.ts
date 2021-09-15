@@ -103,6 +103,22 @@ export class Setup extends SfdxCommand {
       scratchOrgTotal = scratchOrgNumber + 1;
       scratchOrg = scratchOrgNumber;
     }
+    const options = { headless: !devHubConfig.showBrowser };
+    if (devHubConfig.puppeteerBrowserPath) options['executablePath'] = devHubConfig.puppeteerBrowserPath;
+    const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
+      devHubConfig.scratchOrgAdminUsername,
+      this.ux,
+      scratchorgMessages,
+      options
+    );
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    setTimeout(async () => {
+      try {
+        await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
+      } catch (e) {
+        /* Do nothing*/
+      }
+    }, 60000);
     if (scratchOrg < 0) scratchOrg = 0;
     for (scratchOrg; scratchOrg < scratchOrgTotal; scratchOrg++) {
       modifyArgFlag(['-n', '--scratch-org-number'], scratchOrg.toString(), this.argv);
@@ -161,25 +177,7 @@ export class Setup extends SfdxCommand {
             cmd += `${a}=${devHubConfig[a]} `;
           });
         this.ux.log('Running ' + cmd);
-        const options = { headless: !devHubConfig.showBrowser };
-        if (devHubConfig.puppeteerBrowserPath) options['executablePath'] = devHubConfig.puppeteerBrowserPath;
-        const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
-          devHubConfig.scratchOrgAdminUsername,
-          this.ux,
-          scratchorgMessages,
-          options
-        );
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(true), 60000);
-          // eslint-disable-next-line no-empty
-        } catch (e) {}
         output = shell(cmd);
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          setTimeout(async () => await puppeteerHoseMyOrg.modifyCDNAccessPerm(false), 60000);
-          // eslint-disable-next-line no-empty
-        } catch (e) {}
         if (!output)
           throw new SfdxError(
             messages.getMessage('setup.errorStoreCreate', [
@@ -204,6 +202,14 @@ export class Setup extends SfdxCommand {
             );
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      setTimeout(async () => {
+        try {
+          await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
+        } catch (e) {
+          /* Do nothing*/
+        }
+      }, 60000);
     }
     return {};
   }
