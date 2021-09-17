@@ -37,23 +37,23 @@ See below for the full list of commands.
 
 ### To run from local git repo:
 
-<strong>Intended for plugin developers or people trying out a workaround and don't want to override there b2c sfdx plugin.</strong>
+<strong>Intended for plugin developers or people trying out a workaround and don't want to override their commerce sfdx plugin.</strong>
 
 ```
 $ yarn install
-$ bin/run b2c
+$ bin/run commerce
 ```
 
 ### When you’re ready to test-drive your plug-in from local git repo, link your git repo to Salesforce CLI.
 
-<strong>Intended for plugin developers or people trying out a workaround and want this to be their default for sfdx b2c commands</strong>
+<strong>Intended for plugin developers or people trying out a workaround and want this to be their default for sfdx commerce commands</strong>
 from inside the root of the git repo
 
 ```
 sfdx plugins:link
 ```
 
-## Now that you have the b2c plugin installed please see:
+## Now that you have the commerce plugin installed please see:
 
 - [Usage Wiki](https://git.soma.salesforce.com/communities/1commerce/wiki/Usage)
 - [Quip Doc: [WIP] B2C Store Setup using SFDX](https://salesforce.quip.com/xMU3ATjR1QQa)
