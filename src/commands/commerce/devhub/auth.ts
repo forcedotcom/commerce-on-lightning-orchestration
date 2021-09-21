@@ -40,9 +40,9 @@ export class DevhubAuth extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
     this.devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, DevhubAuth.flagsConfig, this.flags);
-    await Requires.default(this.devHubConfig.instanceUrl).build();
+    await Requires.default(/* this.devHubConfig.instanceUrl*/).build();
     if (this.devHubConfig.useJwt) {
-      await this.createConnectedApp();
+      if (!this.devHubConfig.clientId) await this.createConnectedApp();
       await this.authJwtGrant();
     } else await this.authWebLogin(this.devHubConfig.hubOrgAlias, this.devHubConfig.instanceUrl);
     return { authSuccessful: true };
@@ -53,13 +53,13 @@ export class DevhubAuth extends SfdxCommand {
     if (await this.isDevhubConnected()) return;
     this.ux.log(chalk.green.bold(msgs.getMessage('auth.checkSync', [`${instanceUrl}`, `${hubOrgAlias}`])));
     this.ux.startSpinner(msgs.getMessage('auth.authenticating'));
-    this.ux.setSpinnerStatus(msgs.getMessage('auth.authingWith', ['sfdx alt:auth:pass']));
-    // TODO consider sfdx-waw-plugin here waw:auth:username:login
-    let output = shellJsonSfdx(
+    const cmd =
       `sfdx auth:web:login -d -a "${hubOrgAlias}" -r "${instanceUrl}" ${
         this.devHubConfig.clientId ? '-i ' + this.devHubConfig.clientId : ''
-      }` + (this.devHubConfig.sfdcLoginUrl ? ` --instanceurl "${this.devHubConfig.sfdcLoginUrl}"` : '')
-    );
+      }` + (this.devHubConfig.sfdcLoginUrl ? ` --instanceurl "${this.devHubConfig.sfdcLoginUrl}"` : '');
+    this.ux.setSpinnerStatus(msgs.getMessage('auth.authingWith', [cmd]));
+    // TODO consider sfdx-waw-plugin here waw:auth:username:login
+    let output = shellJsonSfdx(cmd);
     this.ux.stopSpinner('Done Authenticating.');
     if (output.status === 0 && (!output.result || Object.keys(output.result).length === 0)) {
       this.ux.log('\n\n');
@@ -85,7 +85,11 @@ export class DevhubAuth extends SfdxCommand {
       await statusManager.getValue(this.devHubConfig, new Devhub(), 'connectApp')
     );
     shellJsonSfdx(
-      `sfdx force:auth:jwt:grant -i "${connectApp.oauthConfig.consumerKey}"` +
+      `sfdx force:auth:jwt:grant -i "${
+        connectApp.oauthConfig && connectApp.oauthConfig.consumerKey
+          ? connectApp.oauthConfig.consumerKey
+          : this.devHubConfig.clientId
+      }"` +
         ` -u ${this.devHubConfig.hubOrgAdminUsername} -f ${BASE_DIR + '/.certs'}/server.key` +
         ` -r ${this.devHubConfig.instanceUrl}`
     );
@@ -157,6 +161,9 @@ export class DevhubAuth extends SfdxCommand {
       if (out.errors) throw new SfdxError(JSON.stringify(out.errors, null, 4));
     } catch (e) {
       if ((e as SfdxError).message.indexOf('NamedOrgNotFound') >= 0) {
+        this.ux.log(
+          `No auth for ${this.devHubConfig.hubOrgAdminUsername}, please either rerun with web auth or provide clientid using the '--client-id' flag or in the devhub config`
+        );
         await this.authWebLogin(this.devHubConfig.hubOrgAlias, this.devHubConfig.instanceUrl);
         return await this.createConnectedApp();
       } else if ((e as SfdxError).message.indexOf('DUPLICATE_VALUE') < 0) throw e;

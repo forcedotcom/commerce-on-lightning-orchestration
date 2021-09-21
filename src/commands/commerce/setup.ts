@@ -14,6 +14,7 @@ import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
+import { PuppeteerHoseMyOrg } from '../../lib/utils/puppeteerHoseMyOrg';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -90,7 +91,7 @@ export class Setup extends SfdxCommand {
       this.flags['store-number'] = 0;
     }
     let devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
-    await Requires.default(devHubConfig.instanceUrl).build();
+    await Requires.default(/* devHubConfig.instanceUrl*/).build();
     this.ux.log(chalk.green('Authing devhub'));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let output = await DevhubAuth.run(addAllowedArgs(this.argv, DevhubAuth), this.config);
@@ -102,6 +103,22 @@ export class Setup extends SfdxCommand {
       scratchOrgTotal = scratchOrgNumber + 1;
       scratchOrg = scratchOrgNumber;
     }
+    const options = { headless: !devHubConfig.showBrowser };
+    if (devHubConfig.puppeteerBrowserPath) options['executablePath'] = devHubConfig.puppeteerBrowserPath;
+    const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
+      devHubConfig.scratchOrgAdminUsername,
+      this.ux,
+      scratchorgMessages,
+      options
+    );
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    setTimeout(async () => {
+      try {
+        await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
+      } catch (e) {
+        /* Do nothing*/
+      }
+    }, 60000);
     if (scratchOrg < 0) scratchOrg = 0;
     for (scratchOrg; scratchOrg < scratchOrgTotal; scratchOrg++) {
       modifyArgFlag(['-n', '--scratch-org-number'], scratchOrg.toString(), this.argv);
@@ -125,8 +142,16 @@ export class Setup extends SfdxCommand {
         modifyArgFlag(['-m', '--store-number'], store.toString(), this.argv);
         this.flags['store-number'] = store;
         devHubConfig = await parseJSONConfigWithFlags(this.flags.configuration, Setup.flagsConfig, this.flags);
+        if (devHubConfig.type === 'both') devHubConfig.type = 'b2c';
         shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
-        const args = ['store-name', 'templatename', 'definitionfile', 'type', 'buyer-username'];
+        const args = [
+          'store-name',
+          'templatename',
+          'definitionfile',
+          'type',
+          'buyer-username',
+          'scratch-org-buyer-username',
+        ];
         const vargs = [
           'buyerEmail',
           'existingBuyerAuthentication',
@@ -139,10 +164,11 @@ export class Setup extends SfdxCommand {
         ];
         let cmd = `sfdx force:config:set apiVersion=${devHubConfig.apiVersion} && sfdx commerce:store:create -u ${devHubConfig.scratchOrgAdminUsername} -v ${devHubConfig.hubOrgAdminUsername} `;
         args
+          // .map((a) => a.replace('scratchOrg', ''))
           .filter((a) => devHubConfig[convertKabobToCamel(a)] && isFlagPassed(`--${a}`, this.argv, scratchOrg, store))
           .forEach((a) => {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            cmd += `--${a} ${devHubConfig[convertKabobToCamel(a)]} `;
+            cmd += `--${a.replace('scratch-org-', '')} ${devHubConfig[convertKabobToCamel(a)]} `;
           });
         vargs
           .filter((a) => devHubConfig[a] && isFlagPassed(`--${a}`, this.argv, scratchOrg, store))
@@ -165,7 +191,7 @@ export class Setup extends SfdxCommand {
           shell('sfdx plugins|grep commerce>/dev/null || echo y | sfdx plugins:install commerce');
           output = shellJsonSfdx(
             'sfdx commerce:payments:quickstart:setup ' +
-              `-u ${devHubConfig.scratchOrgAdminUsername} -p ${devHubConfig.paymentAdapter}`
+              `-u ${devHubConfig.scratchOrgAdminUsername} -p ${devHubConfig.paymentAdapter} -n${devHubConfig.storeName}`
           ); // TODO pass args payment-adapter, store-name
           if (!output)
             throw new SfdxError(
@@ -176,6 +202,14 @@ export class Setup extends SfdxCommand {
             );
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      setTimeout(async () => {
+        try {
+          await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
+        } catch (e) {
+          /* Do nothing*/
+        }
+      }, 60000);
     }
     return {};
   }

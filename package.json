@@ -1,6 +1,6 @@
 {
   "name": "commerce-orchestration",
-  "version": "232.0.1",
+  "version": "234.0.2",
   "author": "Jonathan Arndt",
   "bugs": "https://github.com/forcedotcom/commerce-on-lightning-orchestration/issues",
   "dependencies": {
@@ -117,7 +117,7 @@
     "posttest": "yarn lint && yarn test:deprecation-policy && yarn test:command-reference",
     "precommit": "npm run clean && npm run build && npm run lint && npm run version",
     "prepack": "sf-prepack",
-    "prepare": "rm -f .oclif.manifest.json && yarn run prepack",
+    "prepare": "yarn run build && oclif-dev manifest",
     "prepublishOnly": "yarn run build && oclif-dev manifest",
     "pretest": "sf-compile-test",
     "prettier": "prettier --write src/**/**/*.ts && prettier --write src/**/*.ts && prettier --write src/*.ts && prettier --write test/**/*.ts && prettier --write test/**/**/*.ts",
@@ -131,7 +131,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "sf-husky-pre-commit",
+      "pre-commit": "eslint \"src/**/*.ts\" \"test/**/*.ts\" --fix; sf-husky-pre-commit",
       "commit-msg": "sf-husky-commit-msg",
       "pre-push": "sf-husky-pre-push"
     }
