@@ -80,13 +80,13 @@ USAGE
 
 OPTIONS
   -F, --server-cert=server-cert                                                     [default:
-                                                                                    /Users/kylesiemer/.commerce/.certs/s
+                                                                                    ~/.commerce/.certs/s
                                                                                     erver.crt] Server Cert file
 
   -J, --use-jwt                                                                     Use JWT to auth
 
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/kylesiemer/.commerce/devhub-c
+                                                                                    ~/.commerce/devhub-c
                                                                                     onfiguration.json] Pass in config to
                                                                                     override default
 
@@ -137,7 +137,7 @@ OPTIONS
                                                                                     of the hub org admin
 
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/kylesiemer/.commerce/devhub-c
+                                                                                    ~/.commerce/devhub-c
                                                                                     onfiguration.json] Pass in config to
                                                                                     override default
 
@@ -181,12 +181,12 @@ USAGE
 
 OPTIONS
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/kylesiemer/.commerce/devhub-c
+                                                                                    ~/.commerce/devhub-c
                                                                                     onfiguration.json] Pass in config to
                                                                                     override default
 
   -f, --definitionfile=definitionfile                                               [default:
-                                                                                    /Users/kylesiemer/.commerce/config/s
+                                                                                    ~/.commerce/config/s
                                                                                     tore-scratch-def.json] store scratch
                                                                                     def
 
