@@ -80,14 +80,14 @@ USAGE
 
 OPTIONS
   -F, --server-cert=server-cert                                                     [default:
-                                                                                    /Users/jarndt/.commerce/.certs/serve
-                                                                                    r.crt] Server Cert file
+                                                                                    /Users/kylesiemer/.commerce/.certs/s
+                                                                                    erver.crt] Server Cert file
 
   -J, --use-jwt                                                                     Use JWT to auth
 
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/jarndt/.commerce/devhub-confi
-                                                                                    guration.json] Pass in config to
+                                                                                    /Users/kylesiemer/.commerce/devhub-c
+                                                                                    onfiguration.json] Pass in config to
                                                                                     override default
 
   -i, --client-id=client-id                                                         Client Id for auth:web:login
@@ -137,8 +137,8 @@ OPTIONS
                                                                                     of the hub org admin
 
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/jarndt/.commerce/devhub-confi
-                                                                                    guration.json] Pass in config to
+                                                                                    /Users/kylesiemer/.commerce/devhub-c
+                                                                                    onfiguration.json] Pass in config to
                                                                                     override default
 
   -g, --scratch-org-alias=scratch-org-alias                                         [default: devhub] Alias name for
@@ -181,13 +181,14 @@ USAGE
 
 OPTIONS
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/jarndt/.commerce/devhub-confi
-                                                                                    guration.json] Pass in config to
+                                                                                    /Users/kylesiemer/.commerce/devhub-c
+                                                                                    onfiguration.json] Pass in config to
                                                                                     override default
 
   -f, --definitionfile=definitionfile                                               [default:
-                                                                                    /Users/jarndt/.commerce/config/store
-                                                                                    -scratch-def.json] store scratch def
+                                                                                    /Users/kylesiemer/.commerce/config/s
+                                                                                    tore-scratch-def.json] store scratch
+                                                                                    def
 
   -m, --store-number=store-number                                                   [default: -1] Index number for the
                                                                                     store to be created
