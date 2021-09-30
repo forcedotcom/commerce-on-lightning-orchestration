@@ -62,7 +62,9 @@ export class ScratchOrgCreate extends SfdxCommand {
     const sfdxProject: SfdxProject = Object.assign(new SfdxProject(), fs.readJsonSync(BASE_DIR + '/sfdx-project.json'));
     sfdxProject.sourceApiVersion = this.devHubConfig.apiVersion;
     sfdxProject.sfdcLoginUrl = this.devHubConfig.instanceUrl;
-    sfdxProject.signupTargetLoginUrl = this.devHubConfig.sfdcLoginUrl;
+    sfdxProject.signupTargetLoginUrl = this.devHubConfig.signupTargetLoginUrl
+      ? this.devHubConfig.signupTargetLoginUrl
+      : this.devHubConfig.sfdcLoginUrl;
     this.devHubDir = DEVHUB_DIR(BASE_DIR, this.devHubConfig.hubOrgAdminUsername);
     const sfdxProjectFile = mkdirSync(this.devHubDir) + '/sfdx-project.json';
     fs.writeFileSync(sfdxProjectFile, JSON.stringify(sfdxProject, null, 4));
@@ -112,7 +114,10 @@ export class ScratchOrgCreate extends SfdxCommand {
           ? this.devHubConfig.orgCreateDir.replace('$(BASE_DIR)', BASE_DIR).replace('$(DEV_HUB_DIR)', this.devHubDir)
           : '/tmp',
         // this.devHubDir ? this.devHubDir : BASE_DIR,
-        { SFDX_AUDIENCE_URL: this.devHubConfig.instanceUrl }
+        {
+          SFDX_AUDIENCE_URL: this.devHubConfig.instanceUrl,
+          SFDX_SCRATCH_ORG_CREATION_LOGIN_URL: this.devHubConfig.signupTargetLoginUrl,
+        }
       );
       this.ux.setSpinnerStatus(chalk.green(JSON.stringify(res)));
       await statusManager.setValue(this.devHubConfig, 2, 'created', true);
