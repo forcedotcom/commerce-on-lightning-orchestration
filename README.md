@@ -10,6 +10,22 @@
 [![License](https://img.shields.io/npm/l/1commerce.svg)](https://github.com/1commerce/1commerce/blob/master/package.json)
 ==============
 
+This is 1 of 3 plugins to help setup a store. 
+
+This plugin will create and auth a scratchorg as the primary purpose then calls the commerce-on-lightning plugin to create a store. 
+
+
+[commerce-on-lightning-dev](https://git.soma.salesforce.com/communities/commerce-on-lightning-dev) - commerce-dev     
+- devhubs (local development)
+
+[commerce-on-lightning-orchestration](https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration) - commerce-orchestration <---- THIS PLUGIN
+- scratchorgs
+
+[commerce-on-lightning](https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration) - @salesforce/commerce
+- store
+
+==============
+
 - [Install](#install)
 - [Post Install](#now-that-you-have-the-commerce-plugin-installed-please-see)
 - [Commands](#commands)
