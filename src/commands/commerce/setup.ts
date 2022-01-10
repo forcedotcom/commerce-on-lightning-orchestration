@@ -14,7 +14,6 @@ import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
-//import { PuppeteerHoseMyOrg } from '../../lib/utils/puppeteerHoseMyOrg';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -105,20 +104,6 @@ export class Setup extends SfdxCommand {
     }
     const options = { headless: !devHubConfig.showBrowser };
     if (devHubConfig.puppeteerBrowserPath) options['executablePath'] = devHubConfig.puppeteerBrowserPath;
-    //const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
-    //  devHubConfig.scratchOrgAdminUsername,
-    //  this.ux,
-    //  scratchorgMessages,
-    //  options
-    //);
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    //setTimeout(async () => {
-    //  try {
-    //    await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
-    //  } catch (e) {
-        /* Do nothing*/
-    //  }
-    //}, 60000);
     if (scratchOrg < 0) scratchOrg = 0;
     for (scratchOrg; scratchOrg < scratchOrgTotal; scratchOrg++) {
       modifyArgFlag(['-n', '--scratch-org-number'], scratchOrg.toString(), this.argv);
@@ -202,14 +187,6 @@ export class Setup extends SfdxCommand {
             );
         }
       }
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      //setTimeout(async () => {
-      //  try {
-      //    await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
-      //  } catch (e) {
-          /* Do nothing*/
-      //  }
-      //}, 60000);
     }
     return {};
   }
