@@ -14,7 +14,7 @@ import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
-import { PuppeteerHoseMyOrg } from '../../lib/utils/puppeteerHoseMyOrg';
+//import { PuppeteerHoseMyOrg } from '../../lib/utils/puppeteerHoseMyOrg';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -105,12 +105,12 @@ export class Setup extends SfdxCommand {
     }
     const options = { headless: !devHubConfig.showBrowser };
     if (devHubConfig.puppeteerBrowserPath) options['executablePath'] = devHubConfig.puppeteerBrowserPath;
-    const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
-      devHubConfig.scratchOrgAdminUsername,
-      this.ux,
-      scratchorgMessages,
-      options
-    );
+    //const puppeteerHoseMyOrg = new PuppeteerHoseMyOrg(
+    //  devHubConfig.scratchOrgAdminUsername,
+    //  this.ux,
+    //  scratchorgMessages,
+    //  options
+    //);
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     //setTimeout(async () => {
     //  try {
