@@ -112,13 +112,13 @@ export class Setup extends SfdxCommand {
       options
     );
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    setTimeout(async () => {
-      try {
-        await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
-      } catch (e) {
+    //setTimeout(async () => {
+    //  try {
+    //    await puppeteerHoseMyOrg.modifyCDNAccessPerm(true);
+    //  } catch (e) {
         /* Do nothing*/
-      }
-    }, 60000);
+    //  }
+    //}, 60000);
     if (scratchOrg < 0) scratchOrg = 0;
     for (scratchOrg; scratchOrg < scratchOrgTotal; scratchOrg++) {
       modifyArgFlag(['-n', '--scratch-org-number'], scratchOrg.toString(), this.argv);
@@ -203,13 +203,13 @@ export class Setup extends SfdxCommand {
         }
       }
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      setTimeout(async () => {
-        try {
-          await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
-        } catch (e) {
+      //setTimeout(async () => {
+      //  try {
+      //    await puppeteerHoseMyOrg.modifyCDNAccessPerm(false);
+      //  } catch (e) {
           /* Do nothing*/
-        }
-      }, 60000);
+      //  }
+      //}, 60000);
     }
     return {};
   }
