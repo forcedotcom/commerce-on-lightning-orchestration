@@ -10,6 +10,22 @@
 [![License](https://img.shields.io/npm/l/1commerce.svg)](https://github.com/1commerce/1commerce/blob/master/package.json)
 ==============
 
+This is 1 of 3 plugins to help setup a store. 
+
+This plugin will create and auth a scratchorg as the primary purpose then calls the commerce-on-lightning plugin to create a store. 
+
+
+[commerce-on-lightning-dev](https://git.soma.salesforce.com/communities/commerce-on-lightning-dev) - commerce-dev     
+- devhubs (local development)
+
+[commerce-on-lightning-orchestration](https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration) - commerce-orchestration <---- THIS PLUGIN
+- scratchorgs
+
+[commerce-on-lightning](https://git.soma.salesforce.com/communities/commerce-on-lightning-orchestration) - @salesforce/commerce
+- store
+
+==============
+
 - [Install](#install)
 - [Post Install](#now-that-you-have-the-commerce-plugin-installed-please-see)
 - [Commands](#commands)
@@ -37,23 +53,23 @@ See below for the full list of commands.
 
 ### To run from local git repo:
 
-<strong>Intended for plugin developers or people trying out a workaround and don't want to override there b2c sfdx plugin.</strong>
+<strong>Intended for plugin developers or people trying out a workaround and don't want to override their commerce sfdx plugin.</strong>
 
 ```
 $ yarn install
-$ bin/run b2c
+$ bin/run commerce
 ```
 
 ### When you’re ready to test-drive your plug-in from local git repo, link your git repo to Salesforce CLI.
 
-<strong>Intended for plugin developers or people trying out a workaround and want this to be their default for sfdx b2c commands</strong>
+<strong>Intended for plugin developers or people trying out a workaround and want this to be their default for sfdx commerce commands</strong>
 from inside the root of the git repo
 
 ```
 sfdx plugins:link
 ```
 
-## Now that you have the b2c plugin installed please see:
+## Now that you have the commerce plugin installed please see:
 
 - [Usage Wiki](https://git.soma.salesforce.com/communities/1commerce/wiki/Usage)
 - [Quip Doc: [WIP] B2C Store Setup using SFDX](https://salesforce.quip.com/xMU3ATjR1QQa)
@@ -80,14 +96,14 @@ USAGE
 
 OPTIONS
   -F, --server-cert=server-cert                                                     [default:
-                                                                                    /Users/jarndt/.commerce/.certs/serve
-                                                                                    r.crt] Server Cert file
+                                                                                    ~/.commerce/.certs/s
+                                                                                    erver.crt] Server Cert file
 
   -J, --use-jwt                                                                     Use JWT to auth
 
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/jarndt/.commerce/devhub-confi
-                                                                                    guration.json] Pass in config to
+                                                                                    ~/.commerce/devhub-c
+                                                                                    onfiguration.json] Pass in config to
                                                                                     override default
 
   -i, --client-id=client-id                                                         Client Id for auth:web:login
@@ -137,8 +153,8 @@ OPTIONS
                                                                                     of the hub org admin
 
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/jarndt/.commerce/devhub-confi
-                                                                                    guration.json] Pass in config to
+                                                                                    ~/.commerce/devhub-c
+                                                                                    onfiguration.json] Pass in config to
                                                                                     override default
 
   -g, --scratch-org-alias=scratch-org-alias                                         [default: devhub] Alias name for
@@ -181,13 +197,14 @@ USAGE
 
 OPTIONS
   -c, --configuration=configuration                                                 [default:
-                                                                                    /Users/jarndt/.commerce/devhub-confi
-                                                                                    guration.json] Pass in config to
+                                                                                    ~/.commerce/devhub-c
+                                                                                    onfiguration.json] Pass in config to
                                                                                     override default
 
   -f, --definitionfile=definitionfile                                               [default:
-                                                                                    /Users/jarndt/.commerce/config/store
-                                                                                    -scratch-def.json] store scratch def
+                                                                                    ~/.commerce/config/s
+                                                                                    tore-scratch-def.json] store scratch
+                                                                                    def
 
   -m, --store-number=store-number                                                   [default: -1] Index number for the
                                                                                     store to be created
