@@ -130,6 +130,7 @@ export class DevHubConfig {
   public orgCreateDir: string;
   public showBrowser: boolean = false;
   public puppeteerBrowserPath: string;
+  public signupTargetLoginUrl: string;
 }
 export class ScratchOrgConfig {
   public scratchOrgAdminUsername: string;
