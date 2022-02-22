@@ -1,5 +1,5 @@
 {
-    "apiVersion": "52.0",
+    "apiVersion": "54.0",
     "hubOrgAdminEmail": "$(whoami)@salesforce.com",
     "hubOrgAdminUsername": "ceo@mydevhub.com",
     "hubOrgAdminPassword": "123456",
