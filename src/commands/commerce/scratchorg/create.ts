@@ -69,7 +69,7 @@ export class ScratchOrgCreate extends SfdxCommand {
     const sfdxProjectFile = mkdirSync(this.devHubDir) + '/sfdx-project.json';
     fs.writeFileSync(sfdxProjectFile, JSON.stringify(sfdxProject, null, 4));
     await this.createScratchOrg();
-    this.ux.log(chalk.green.bold(msgs.getMessage('create.completedCreatingCommunity')));
+    this.ux.log(chalk.green.bold(msgs.getMessage('create.completedCreatingScratchOrg')));
     this.ux.log(chalk.green.bold(msgs.getMessage('create.allDoneProceedCreatingNewStore', ['commerce:store:create'])));
     return { scratchOrgCreated: true };
   }
