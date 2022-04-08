@@ -19,7 +19,7 @@ import { shellJsonSfdx } from '../../../lib/utils/shell';
 import { sleep } from '../../../lib/utils/sleep';
 import { ScratchOrg, statusManager } from '../../../lib/utils/statusFileManager';
 import { DevhubAuth } from '../devhub/auth';
-import { mkdirSync } from '../../../lib/utils/fsUtils';
+import { copyExampleFiles, mkdirSync } from '../../../lib/utils/fsUtils';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -40,6 +40,7 @@ export class ScratchOrgCreate extends SfdxCommand {
         'scratch-org-number',
         'scratch-org-alias',
         'is-b2c-lite-access-perm-needed',
+        'prompt',
       ],
       scratchOrgFlags
     ),
@@ -49,6 +50,8 @@ export class ScratchOrgCreate extends SfdxCommand {
   private devHubDir: string;
 
   public async run(): Promise<AnyJson> {
+    // copy all example files
+    copyExampleFiles(this.flags.prompt);
     this.devHubConfig = await parseJSONConfigWithFlags(
       this.flags.configuration,
       ScratchOrgCreate.flagsConfig,

@@ -1,44 +1,57 @@
 [
-  {
-    "command": "commerce:devhub:auth",
-    "plugin": "commerce-orchestration",
-    "flags": ["client-id", "configuration", "json", "loglevel", "server-cert", "use-jwt"]
-  },
-  {
-    "command": "commerce:open:devhubconfig",
-    "plugin": "commerce-orchestration",
-    "flags": ["editor", "json", "loglevel"]
-  },
-  {
-    "command": "commerce:scratchorg:create",
-    "plugin": "commerce-orchestration",
-    "flags": [
-      "api-version",
-      "configuration",
-      "hub-org-admin-username",
-      "is-b2c-lite-access-perm-needed",
-      "json",
-      "loglevel",
-      "scratch-org-admin-username",
-      "scratch-org-alias",
-      "scratch-org-number",
-      "type"
-    ]
-  },
-  {
-    "command": "commerce:setup",
-    "plugin": "commerce-orchestration",
-    "flags": [
-      "configuration",
-      "definitionfile",
-      "json",
-      "loglevel",
-      "scratch-org-admin-username",
-      "scratch-org-number",
-      "scratch-org-store-name",
-      "store-number",
-      "templatename",
-      "type"
-    ]
-  }
+    {
+        "command": "commerce:devhub:auth",
+        "plugin": "commerce-orchestration",
+        "flags": [
+            "client-id",
+            "configuration",
+            "json",
+            "loglevel",
+            "server-cert",
+            "use-jwt"
+        ]
+    },
+    {
+        "command": "commerce:open:devhubconfig",
+        "plugin": "commerce-orchestration",
+        "flags": [
+            "editor",
+            "json",
+            "loglevel"
+        ]
+    },
+    {
+        "command": "commerce:scratchorg:create",
+        "plugin": "commerce-orchestration",
+        "flags": [
+            "api-version",
+            "configuration",
+            "hub-org-admin-username",
+            "is-b2c-lite-access-perm-needed",
+            "json",
+            "loglevel",
+            "prompt",
+            "scratch-org-admin-username",
+            "scratch-org-alias",
+            "scratch-org-number",
+            "type"
+        ]
+    },
+    {
+        "command": "commerce:setup",
+        "plugin": "commerce-orchestration",
+        "flags": [
+            "configuration",
+            "definitionfile",
+            "json",
+            "loglevel",
+            "prompt",
+            "scratch-org-admin-username",
+            "scratch-org-number",
+            "scratch-org-store-name",
+            "store-number",
+            "templatename",
+            "type"
+        ]
+    }
 ]
