@@ -13,7 +13,7 @@
     "permsDisabled": "Perms disabled",
     "usingScratchOrgAdmin": "Using scratch org admin %s",
     "devhubSetupWasNotCompletedSuccessfully": "Devhub setup was not completed successfully. Please complete devhub setup before attempting to create a scratch org.'",
-    "completedCreatingCommunity": "Completed creating community",
+    "completedCreatingScratchOrg": "Completed creating scratch org.",
     "allDoneProceedCreatingNewStore": "All done, you can proceed with creating a new store %s",
     "orgExists": "Org already exists: ",
     "preparingResourcesEtc": "Preparing resources (apex, profiles, email templates, etc.)",

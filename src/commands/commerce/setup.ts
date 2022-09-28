@@ -14,6 +14,7 @@ import { parseJSONConfigWithFlags } from '../../lib/utils/jsonUtils';
 import { Requires } from '../../lib/utils/requires';
 import { shell, shellJsonSfdx } from '../../lib/utils/shell';
 import { convertKabobToCamel } from '../../lib/utils/stringUtils';
+import { copyExampleFiles } from '../../lib/utils/fsUtils';
 import { ScratchOrgCreate } from './scratchorg/create';
 import { DevhubAuth } from './devhub/auth';
 
@@ -76,9 +77,16 @@ export class Setup extends SfdxCommand {
       default: CONFIG_DIR() + '/store-scratch-def.json',
       description: 'store scratch def',
     }),
+    prompt: flags.boolean({
+      char: 'y',
+      default: false,
+      description: 'If there is a file difference detected in example files, prompt before overwriting file',
+    }),
   };
 
   public async run(): Promise<AnyJson> {
+    // copy all example files
+    copyExampleFiles(this.flags.prompt);
     const scratchOrgNumber = this.flags['scratch-org-number'] as number;
     if (scratchOrgNumber < 0) {
       this.ux.log(messages.getMessage('setup.logScratchOrgNumber', [scratchOrgNumber, this.flags.configuration]));
