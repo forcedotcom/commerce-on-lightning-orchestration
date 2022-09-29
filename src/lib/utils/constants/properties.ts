@@ -42,4 +42,11 @@ export const PACKAGE_RETRIEVE_TEMPLATE = (dir = BASE_DIR) =>
   `${mkdirSync(QUICKSTART_CONFIG(dir))}/package-retrieve-template.xml`;
 export const PACKAGE_RETRIEVE = (dir = BASE_DIR) => `${mkdirSync(QUICKSTART_CONFIG(dir))}/package-retrieve.xml`;
 export const SFDX_DIR = (dir = homedir) => `${mkdirSync(dir + '/.sfdx')}`;
+export const FILES_TO_COPY = 'devhub-configuration.json, sfdx-project.json';
+export const DIRS_TO_COPY = 'config';
+export const FILE_COPY_ARGS = [
+  { args: '--copysourcepath', value: B_DIR },
+  { args: '--dirstocopy', value: DIRS_TO_COPY },
+  { args: '--filestocopy', value: FILES_TO_COPY },
+];
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type */

@@ -8,7 +8,7 @@ import os from 'os';
 import path, { resolve } from 'path';
 import { promisify } from 'util';
 import { fs } from '@salesforce/core';
-import { BASE_DIR } from './constants/properties';
+import { BASE_DIR, FILE_COPY_ARGS } from './constants/properties';
 import { shell } from './shell';
 
 export function remove(filePath: string): void {
@@ -46,6 +46,18 @@ export function mkdirSync(name: string): string {
     /* DO NOTHING don't care if file already exists*/
   }
   return name;
+}
+
+export function copyExampleFiles(prompt?: boolean): void {
+  // copy all example files
+  let fileCopyCmd = 'sfdx commerce:files:copy ';
+  if (prompt) {
+    fileCopyCmd = fileCopyCmd.concat('-y ');
+  }
+  FILE_COPY_ARGS.forEach((value) => {
+    fileCopyCmd = fileCopyCmd.concat(value.args, ' "', value.value, '" ');
+  });
+  shell(fileCopyCmd, 'inherit');
 }
 
 export function copyFileSync(source: string, target: string): void {
