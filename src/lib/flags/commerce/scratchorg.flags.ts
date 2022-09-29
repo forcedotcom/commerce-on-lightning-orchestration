@@ -42,4 +42,9 @@ export const scratchOrgFlags = {
     default: 'b2c',
     description: 'b2b or b2c',
   }),
+  prompt: flags.boolean({
+    char: 'y',
+    default: false,
+    description: 'If there is a file difference detected in example files, prompt before overwriting file',
+  }),
 };
