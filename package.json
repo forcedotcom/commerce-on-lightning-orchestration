@@ -1,6 +1,6 @@
 {
   "name": "commerce-orchestration",
-  "version": "240.0.2",
+  "version": "240.0.3",
   "author": "Jonathan Arndt",
   "bugs": "https://github.com/forcedotcom/commerce-on-lightning-orchestration/issues",
   "dependencies": {
