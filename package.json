@@ -1,18 +1,18 @@
 {
   "name": "commerce-orchestration",
-  "version": "238.0.3",
+  "version": "240.0.3",
   "author": "Jonathan Arndt",
   "bugs": "https://github.com/forcedotcom/commerce-on-lightning-orchestration/issues",
   "dependencies": {
     "@mshanemc/plugin-helpers": "^2.1.0",
-    "@oclif/command": "^1.8.16",
-    "@oclif/config": "^1",
-    "@oclif/errors": "^1",
+    "@oclif/command": "^1",
+    "@oclif/errors": "^1.3.5",
+    "@oclif/config": "^1.18.3",
     "@salesforce/command": "^3.1.0",
     "@salesforce/core": "^2.20.5",
     "puppeteer": "^7.1.0",
     "string-argv": "^0.3.1",
-    "tslib": "^2",
+    "tslib": "^2.3.1",
     "yaml": "^2.0.1"
   },
   "devDependencies": {
