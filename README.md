@@ -23,10 +23,9 @@ This plugin will create and auth a scratchorg as the primary purpose then calls 
 # Table of Contents
 
 <!-- toc -->
-
-- [Commerce Orchestration Plugin](#commerce-orchestration-plugin)
-- [Table of Contents](#table-of-contents)
-- [How-to-Contribute](#how-to-contribute)
+* [Commerce Orchestration Plugin](#commerce-orchestration-plugin)
+* [Table of Contents](#table-of-contents)
+* [How-to-Contribute](#how-to-contribute)
 <!-- tocstop -->
 
 <!-- install -->
@@ -73,34 +72,29 @@ sfdx plugins:link
 ## Commands
 
 <!-- commands -->
-
-- [`sfdx commerce:devhub:auth [-c <filepath>] [-F <filepath>] [-J] [-i <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commercedevhubauth--c-filepath--f-filepath--j--i-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx commerce:open:devhubconfig [-e <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commerceopendevhubconfig--e-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx commerce:scratchorg:create [-c <filepath>] [-a <string>] [-v <string>] [-u <string>] [-n <number>] [-p] [-g <string>] [-t <string>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commercescratchorgcreate--c-filepath--a-string--v-string--u-string--n-number--p--g-string--t-string--y---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-- [`sfdx commerce:setup [-c <filepath>] [-u <string>] [-s <string>] [-t <string>] [-n <integer>] [-m <integer>] [-o <string>] [-f <filepath>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commercesetup--c-filepath--u-string--s-string--t-string--n-integer--m-integer--o-string--f-filepath--y---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx commerce:devhub:auth [-c <filepath>] [-F <filepath>] [-J] [-i <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commercedevhubauth--c-filepath--f-filepath--j--i-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx commerce:open:devhubconfig [-e <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commerceopendevhubconfig--e-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx commerce:scratchorg:create [-c <filepath>] [-a <string>] [-v <string>] [-u <string>] [-n <number>] [-p] [-g <string>] [-t <string>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commercescratchorgcreate--c-filepath--a-string--v-string--u-string--n-number--p--g-string--t-string--y---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx commerce:setup [-c <filepath>] [-u <string>] [-s <string>] [-t <string>] [-n <integer>] [-m <integer>] [-o <string>] [-f <filepath>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-commercesetup--c-filepath--u-string--s-string--t-string--n-integer--m-integer--o-string--f-filepath--y---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
 ## `sfdx commerce:devhub:auth [-c <filepath>] [-F <filepath>] [-J] [-i <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Authorize a devhub
 
 ```
-Authorize a devhub
-
 USAGE
-  $ sfdx commerce:devhub:auth [-c <filepath>] [-F <filepath>] [-J] [-i <string>] [--json] [--loglevel
+  $ sfdx commerce:devhub:auth [-c <filepath>] [-F <filepath>] [-J] [-i <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -F, --server-cert=server-cert                                                     [default:
-                                                                                    ~/.commerce/.certs/s
-                                                                                    erver.crt] Server Cert file
+  -F, --server-cert=server-cert                                                     [default: ~/.commerce
+                                                                                    /.certs/server.crt] Server Cert file
 
   -J, --use-jwt                                                                     Use JWT to auth
 
-  -c, --configuration=configuration                                                 [default:
-                                                                                    ~/.commerce/devhub-c
-                                                                                    onfiguration.json] Pass in config to
-                                                                                    override default
+  -c, --configuration=configuration                                                 [default: ~/.commerce
+                                                                                    /devhub-configuration.json] Pass in
+                                                                                    config to override default
 
   -i, --client-id=client-id                                                         Client Id for auth:web:login
 
@@ -113,17 +107,15 @@ EXAMPLE
   sfdx commerce:devhub:auth --configuration devhub-configuration.json
 ```
 
-_See code: [src/commands/commerce/devhub/auth.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v238.0.4/src/commands/commerce/devhub/auth.ts)_
+_See code: [src/commands/commerce/devhub/auth.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v240.0.6/src/commands/commerce/devhub/auth.ts)_
 
 ## `sfdx commerce:open:devhubconfig [-e <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Open devhub-configuration.json file
 
 ```
-Open devhub-configuration.json file
-
 USAGE
-  $ sfdx commerce:open:devhubconfig [-e <string>] [--json] [--loglevel
+  $ sfdx commerce:open:devhubconfig [-e <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -139,34 +131,31 @@ EXAMPLE
   sfdx commerce:open:devhubconfig -e atom
 ```
 
-_See code: [src/commands/commerce/open/devhubconfig.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v238.0.4/src/commands/commerce/open/devhubconfig.ts)_
+_See code: [src/commands/commerce/open/devhubconfig.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v240.0.6/src/commands/commerce/open/devhubconfig.ts)_
 
 ## `sfdx commerce:scratchorg:create [-c <filepath>] [-a <string>] [-v <string>] [-u <string>] [-n <number>] [-p] [-g <string>] [-t <string>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Create a scratch org
 
 ```
-Create a scratch org
-
 USAGE
-  $ sfdx commerce:scratchorg:create [-c <filepath>] [-a <string>] [-v <string>] [-u <string>] [-n <number>] [-p] [-g
+  $ sfdx commerce:scratchorg:create [-c <filepath>] [-a <string>] [-v <string>] [-u <string>] [-n <number>] [-p] [-g 
   <string>] [-t <string>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   -a, --hub-org-admin-username=hub-org-admin-username                               [default: ceo@mydevhub.com] username
                                                                                     of the hub org admin
 
-  -c, --configuration=configuration                                                 [default:
-                                                                                    ~/.commerce/devhub-c
-                                                                                    onfiguration.json] Pass in config to
-                                                                                    override default
+  -c, --configuration=configuration                                                 [default: ~/.commerce
+                                                                                    /devhub-configuration.json] Pass in
+                                                                                    config to override default
 
   -g, --scratch-org-alias=scratch-org-alias                                         [default: devhub] Alias name for
                                                                                     this scratch org
 
-  -n, --scratch-org-number=scratch-org-number                                       Which store to create from config
-                                                                                    file scratchOrgs list -1 for all
-                                                                                    stores
+  -n, --scratch-org-number=scratch-org-number                                       [default: 0] Which store to create
+                                                                                    from config file scratchOrgs list -1
+                                                                                    for all stores
 
   -p, --is-b2c-lite-access-perm-needed                                              Should the script run sfdx
                                                                                     force:org:open and wait for you to
@@ -194,30 +183,26 @@ EXAMPLE
   sfdx commerce:scratchorg:create --configuration devhub-configuration.json
 ```
 
-_See code: [src/commands/commerce/scratchorg/create.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v238.0.4/src/commands/commerce/scratchorg/create.ts)_
+_See code: [src/commands/commerce/scratchorg/create.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v240.0.6/src/commands/commerce/scratchorg/create.ts)_
 
 ## `sfdx commerce:setup [-c <filepath>] [-u <string>] [-s <string>] [-t <string>] [-n <integer>] [-m <integer>] [-o <string>] [-f <filepath>] [-y] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Setup a devhub and scratch org from start to finish with one command
 
 ```
-Setup a devhub and scratch org from start to finish with one command
-
 USAGE
-  $ sfdx commerce:setup [-c <filepath>] [-u <string>] [-s <string>] [-t <string>] [-n <integer>] [-m <integer>] [-o
-  <string>] [-f <filepath>] [-y] [--json] [--loglevel
+  $ sfdx commerce:setup [-c <filepath>] [-u <string>] [-s <string>] [-t <string>] [-n <integer>] [-m <integer>] [-o 
+  <string>] [-f <filepath>] [-y] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -c, --configuration=configuration                                                 [default:
-                                                                                    ~/.commerce/devhub-c
-                                                                                    onfiguration.json] Pass in config to
-                                                                                    override default
+  -c, --configuration=configuration                                                 [default: ~/.commerce
+                                                                                    /devhub-configuration.json] Pass in
+                                                                                    config to override default
 
-  -f, --definitionfile=definitionfile                                               [default:
-                                                                                    ~/.commerce/config/s
-                                                                                    tore-scratch-def.json] store scratch
-                                                                                    def
+  -f, --definitionfile=definitionfile                                               [default: ~/.commerce
+                                                                                    /config/store-scratch-def.json]
+                                                                                    store scratch def
 
   -m, --store-number=store-number                                                   [default: -1] Index number for the
                                                                                     store to be created
@@ -253,8 +238,7 @@ EXAMPLES
   sfdx commerce:setup
 ```
 
-_See code: [src/commands/commerce/setup.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v238.0.4/src/commands/commerce/setup.ts)_
-
+_See code: [src/commands/commerce/setup.ts](https://github.com/forcedotcom/commerce-on-lightning-orchestration/blob/v240.0.6/src/commands/commerce/setup.ts)_
 <!-- commandsstop -->
 
 # How-to-Contribute
